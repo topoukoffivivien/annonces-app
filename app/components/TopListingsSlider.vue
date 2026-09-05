@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   listings: Array<{ id: string; title: string; price: number; city: string; images: string[] }>
+  title?: string
 }>()
 
 const track = ref<HTMLElement | null>(null)
@@ -15,7 +16,7 @@ function formatPrice(p: number) {
 <template>
   <section v-if="listings.length" class="slider">
     <div class="slider-head">
-      <h2>À la une</h2>
+      <h2>{{ title || 'À la une' }}</h2>
       <div class="nav">
         <button @click="scroll(-1)" aria-label="Précédent">‹</button>
         <button @click="scroll(1)" aria-label="Suivant">›</button>

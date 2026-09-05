@@ -100,6 +100,7 @@ declare global {
   const useAppConfig: typeof import('../../node_modules/nuxt/dist/app/config').useAppConfig
   const useAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData').useAsyncData
   const useAttrs: typeof import('../../node_modules/vue/index').useAttrs
+  const useCategories: typeof import('../../app/composables/useCategories').useCategories
   const useCookie: typeof import('../../node_modules/nuxt/dist/app/composables/cookie').useCookie
   const useCssModule: typeof import('../../node_modules/vue/index').useCssModule
   const useCssVars: typeof import('../../node_modules/vue/index').useCssVars
@@ -199,6 +200,12 @@ declare global {
   // @ts-ignore
   export type { Component, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from '../../node_modules/vue/index'
   import('../../node_modules/vue/index')
+  // @ts-ignore
+  export type { Category } from '../../app/composables/useCategories'
+  import('../../app/composables/useCategories')
+  // @ts-ignore
+  export type { Listing } from '../../app/composables/useListings'
+  import('../../app/composables/useListings')
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -303,6 +310,7 @@ declare module 'vue' {
     readonly useAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['useAppConfig']>
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('../../node_modules/vue/index')['useAttrs']>
+    readonly useCategories: UnwrapRef<typeof import('../../app/composables/useCategories')['useCategories']>
     readonly useCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']>
     readonly useCssModule: UnwrapRef<typeof import('../../node_modules/vue/index')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('../../node_modules/vue/index')['useCssVars']>

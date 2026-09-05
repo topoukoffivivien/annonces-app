@@ -14,9 +14,12 @@ type HydrationStrategies = {
 type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }> & T
 
 interface _GlobalComponents {
+  Banner: typeof import("../../app/components/Banner.vue")['default']
   FilterBar: typeof import("../../app/components/FilterBar.vue")['default']
   Footer: typeof import("../../app/components/Footer.vue")['default']
+  Header: typeof import("../../app/components/Header.vue")['default']
   ListingCard: typeof import("../../app/components/ListingCard.vue")['default']
+  Pagination: typeof import("../../app/components/Pagination.vue")['default']
   TopListingsSlider: typeof import("../../app/components/TopListingsSlider.vue")['default']
   NuxtWelcome: typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']
   NuxtLayout: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
@@ -41,9 +44,12 @@ interface _GlobalComponents {
   Html: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Html']
   Body: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Body']
   NuxtIsland: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
+  LazyBanner: LazyComponent<typeof import("../../app/components/Banner.vue")['default']>
   LazyFilterBar: LazyComponent<typeof import("../../app/components/FilterBar.vue")['default']>
   LazyFooter: LazyComponent<typeof import("../../app/components/Footer.vue")['default']>
+  LazyHeader: LazyComponent<typeof import("../../app/components/Header.vue")['default']>
   LazyListingCard: LazyComponent<typeof import("../../app/components/ListingCard.vue")['default']>
+  LazyPagination: LazyComponent<typeof import("../../app/components/Pagination.vue")['default']>
   LazyTopListingsSlider: LazyComponent<typeof import("../../app/components/TopListingsSlider.vue")['default']>
   LazyNuxtWelcome: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
   LazyNuxtLayout: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/nuxt-layout")['default']>
