@@ -1,0 +1,66 @@
+<script setup lang="ts">
+defineProps<{
+  listings: Array<{ id: string; title: string; price: number; city: string; images: string[] }>
+}>()
+
+const track = ref<HTMLElement | null>(null)
+function scroll(dir: number) {
+  track.value?.scrollBy({ left: dir * 220, behavior: 'smooth' })
+}
+function formatPrice(p: number) {
+  return new Intl.NumberFormat('fr-FR').format(p) + ' CFA'
+}
+</script>
+
+<template>
+  <section v-if="listings.length" class="slider">
+    <div class="slider-head">
+      <h2>À la une</h2>
+      <div class="nav">
+        <button @click="scroll(-1)" aria-label="Précédent">‹</button>
+        <button @click="scroll(1)" aria-label="Suivant">›</button>
+      </div>
+    </div>
+    <div class="track" ref="track">
+      <NuxtLink v-for="l in listings" :key="l.id" :to="`/annonce/${l.id}`" class="slide">
+        <div class="thumb">
+          <img v-if="l.images[0]" :src="l.images[0]" :alt="l.title" />
+          <span v-else class="placeholder">Photo</span>
+        </div>
+        <p class="price">{{ formatPrice(l.price) }}</p>
+        <p class="title">{{ l.title }}</p>
+        <p class="city">{{ l.city }}</p>
+      </NuxtLink>
+    </div>
+  </section>
+</template>
+
+<style scoped>
+.slider { margin-bottom: var(--space-lg); }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--space-sm); }
+.slider-head h2 { margin: 0; }
+.nav { display: flex; gap: var(--space-xs); }
+.nav button {
+  width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--color-border);
+  background: var(--color-surface); font-size: 16px; line-height: 1;
+  transition: border-color 0.15s var(--ease), transform 0.15s var(--ease);
+}
+.nav button:hover { border-color: var(--color-border-strong); transform: translateY(-1px); }
+.track {
+  display: flex; gap: var(--space-sm); overflow-x: auto; scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-xs); scrollbar-width: none;
+}
+.track::-webkit-scrollbar { display: none; }
+.slide {
+  flex: 0 0 clamp(140px, 32vw, 180px); scroll-snap-align: start; text-decoration: none; color: inherit;
+}
+.thumb {
+  aspect-ratio: 1 / 1; background: #f1efe6; border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.placeholder { color: var(--color-ink-soft); font-size: var(--step--1); }
+.price { font-weight: 700; margin: var(--space-xs) 0 0; color: var(--color-primary-ink); }
+.title { font-size: var(--step--1); margin: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.city { font-size: var(--step--1); color: var(--color-ink-soft); margin: 0; }
+</style>
