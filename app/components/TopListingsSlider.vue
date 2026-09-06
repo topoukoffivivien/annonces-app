@@ -18,8 +18,8 @@ function formatPrice(p: number) {
     <div class="slider-head">
       <h2>{{ title || 'À la une' }}</h2>
       <div class="nav">
-        <button @click="scroll(-1)" aria-label="Précédent">‹</button>
-        <button @click="scroll(1)" aria-label="Suivant">›</button>
+        <button class="btn-icon" @click="scroll(-1)" aria-label="Précédent"><Icon name="chevron-left" /></button>
+        <button class="btn-icon" @click="scroll(1)" aria-label="Suivant"><Icon name="chevron-right" /></button>
       </div>
     </div>
     <div class="track" ref="track">
@@ -41,12 +41,6 @@ function formatPrice(p: number) {
 .slider-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--space-sm); }
 .slider-head h2 { margin: 0; }
 .nav { display: flex; gap: var(--space-xs); }
-.nav button {
-  width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--color-border);
-  background: var(--color-surface); font-size: 16px; line-height: 1;
-  transition: border-color 0.15s var(--ease), transform 0.15s var(--ease);
-}
-.nav button:hover { border-color: var(--color-border-strong); transform: translateY(-1px); }
 .track {
   display: flex; gap: var(--space-sm); overflow-x: auto; scroll-snap-type: x mandatory;
   padding-bottom: var(--space-xs); scrollbar-width: none;

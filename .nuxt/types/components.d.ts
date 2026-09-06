@@ -18,7 +18,9 @@ interface _GlobalComponents {
   FilterBar: typeof import("../../app/components/FilterBar.vue")['default']
   Footer: typeof import("../../app/components/Footer.vue")['default']
   Header: typeof import("../../app/components/Header.vue")['default']
+  Icon: typeof import("../../app/components/Icon.vue")['default']
   ListingCard: typeof import("../../app/components/ListingCard.vue")['default']
+  LoginModal: typeof import("../../app/components/LoginModal.vue")['default']
   Pagination: typeof import("../../app/components/Pagination.vue")['default']
   TopListingsSlider: typeof import("../../app/components/TopListingsSlider.vue")['default']
   NuxtWelcome: typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -48,7 +50,9 @@ interface _GlobalComponents {
   LazyFilterBar: LazyComponent<typeof import("../../app/components/FilterBar.vue")['default']>
   LazyFooter: LazyComponent<typeof import("../../app/components/Footer.vue")['default']>
   LazyHeader: LazyComponent<typeof import("../../app/components/Header.vue")['default']>
+  LazyIcon: LazyComponent<typeof import("../../app/components/Icon.vue")['default']>
   LazyListingCard: LazyComponent<typeof import("../../app/components/ListingCard.vue")['default']>
+  LazyLoginModal: LazyComponent<typeof import("../../app/components/LoginModal.vue")['default']>
   LazyPagination: LazyComponent<typeof import("../../app/components/Pagination.vue")['default']>
   LazyTopListingsSlider: LazyComponent<typeof import("../../app/components/TopListingsSlider.vue")['default']>
   LazyNuxtWelcome: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']>

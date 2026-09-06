@@ -4,6 +4,7 @@ import type { Listing } from '~/composables/useListings'
 const route = useRoute()
 const { fetchListing, fetchListings } = useListings()
 const { categoryName } = useCategories()
+const favorites = useFavoritesStore()
 
 const { data: listing } = await useAsyncData<Listing>(`listing-${route.params.id}`, () =>
   fetchListing(route.params.id as string)
@@ -26,7 +27,7 @@ const { data: relatedData } = await useAsyncData<{ count: number; results: Listi
 )
 
 const relatedListings = computed<Listing[]>(() =>
-  (relatedData.value?.results || []).filter(l => l.id !== route.params.id)
+  (relatedData.value?.results || []).filter((l: Listing) => l.id !== route.params.id)
 )
 
 // Slider automatique de la galerie
@@ -70,8 +71,8 @@ function formatDate(iso: string) {
             <img v-if="listing.images[activeImage]" :src="listing.images[activeImage]" :alt="listing.title" />
             <span v-else class="placeholder">Aucune photo disponible</span>
 
-            <button v-if="listing.images.length > 1" class="arrow left" @click="activeImage = (activeImage - 1 + listing.images.length) % listing.images.length">‹</button>
-            <button v-if="listing.images.length > 1" class="arrow right" @click="activeImage = (activeImage + 1) % listing.images.length">›</button>
+            <button v-if="listing.images.length > 1" class="btn-icon arrow left" @click="activeImage = (activeImage - 1 + listing.images.length) % listing.images.length"><Icon name="chevron-left" /></button>
+            <button v-if="listing.images.length > 1" class="btn-icon arrow right" @click="activeImage = (activeImage + 1) % listing.images.length"><Icon name="chevron-right" /></button>
 
             <div v-if="listing.images.length > 1" class="dots">
               <button
@@ -96,7 +97,10 @@ function formatDate(iso: string) {
           <p class="price">{{ formatPrice(listing.price) }}</p>
           <p class="city">{{ listing.city }}</p>
           <button class="btn-primary contact">Contacter le vendeur</button>
-          <button class="fav">☆ Ajouter aux favoris</button>
+          <button class="fav" @click="favorites.toggle(listing.id)">
+            <Icon :name="favorites.isFavorite(listing.id) ? 'heart-filled' : 'heart'" />
+            {{ favorites.isFavorite(listing.id) ? 'Retiré des favoris' : 'Ajouter aux favoris' }}
+          </button>
         </div>
         <div class="safety-card">
           <h3>Conseils de sécurité</h3>
@@ -124,26 +128,17 @@ function formatDate(iso: string) {
 }
 
 .gallery-main {
+  position: relative;
   aspect-ratio: 4 / 3; background: #f1efe6; border-radius: var(--radius);
   display: flex; align-items: center; justify-content: center; overflow: hidden;
   margin-bottom: var(--space-xs);
 }
 .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
 .placeholder { color: var(--color-ink-soft); }
-/* .thumbs { display: flex; gap: var(--space-xs); overflow-x: auto; }
-.thumbs button {
-  flex: 0 0 64px; aspect-ratio: 1; border-radius: var(--radius-sm); overflow: hidden;
-  border: 2px solid transparent; padding: 0; background: none;
-}
-.thumbs button.active { border-color: var(--color-primary); }
-.thumbs img { width: 100%; height: 100%; object-fit: cover; } */
 
-.gallery-main { position: relative; }
 .arrow {
   position: absolute; top: 50%; transform: translateY(-50%);
-  width: 32px; height: 32px; border-radius: 50%; border: none;
-  background: rgb(0 0 0 / 0.4); color: #fff; font-size: 18px; line-height: 1;
-  transition: background 0.15s var(--ease);
+  background: rgb(0 0 0 / 0.4); border-color: transparent; color: #fff;
 }
 .arrow:hover { background: rgb(0 0 0 / 0.6); }
 .arrow.left { left: var(--space-xs); }
@@ -170,10 +165,12 @@ function formatDate(iso: string) {
 .price-card .city { color: var(--color-ink-soft); font-size: var(--step--1); margin: 0 0 var(--space-sm); }
 .contact { width: 100%; margin-bottom: var(--space-xs); }
 .fav {
-  width: 100%; background: none; border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--space-xs);
+  background: none; border: 1px solid var(--color-border); border-radius: var(--radius-sm);
   padding: var(--space-xs); transition: border-color 0.15s var(--ease);
 }
 .fav:hover { border-color: var(--color-border-strong); }
+.fav svg { width: 16px; height: 16px; }
 .safety-card h3 { font-size: var(--step-0); margin-bottom: var(--space-xs); }
 .safety-card ul { margin: 0; padding-left: 1.1em; font-size: var(--step--1); color: var(--color-ink-soft); display: flex; flex-direction: column; gap: 4px; }
 </style>

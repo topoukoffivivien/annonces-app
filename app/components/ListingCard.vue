@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   listing: {
     id: string
     title: string
@@ -10,8 +10,14 @@ defineProps<{
   }
 }>()
 
+const favorites = useFavoritesStore()
+
 function formatPrice(p: number) {
   return new Intl.NumberFormat('fr-FR').format(p) + ' CFA'
+}
+
+function toggleFavorite() {
+  favorites.toggle(props.listing.id)
 }
 </script>
 
@@ -21,6 +27,14 @@ function formatPrice(p: number) {
       <img v-if="listing.images[0]" :src="listing.images[0]" :alt="listing.title" />
       <span v-else class="placeholder">Photo</span>
       <span v-if="listing.isTop" class="badge-top">TOP</span>
+      <button
+        class="btn-icon fav-btn"
+        :class="{ active: favorites.isFavorite(listing.id) }"
+        @click.stop.prevent="toggleFavorite"
+        :aria-label="favorites.isFavorite(listing.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+      >
+        <Icon :name="favorites.isFavorite(listing.id) ? 'heart-filled' : 'heart'" />
+      </button>
     </div>
     <div class="info">
       <p class="price">{{ formatPrice(listing.price) }}</p>
@@ -73,6 +87,12 @@ function formatPrice(p: number) {
   letter-spacing: 0.02em;
   padding: 2px 8px;
   border-radius: 999px;
+}
+.fav-btn {
+  position: absolute;
+  top: var(--space-xs);
+  right: var(--space-xs);
+  background: rgb(255 255 255 / 0.85);
 }
 .info { padding: var(--space-sm); }
 .price { font-weight: 700; font-size: var(--step-0); margin: 0; color: var(--color-primary-ink); }

@@ -11,11 +11,11 @@ const listings = ref<Listing[]>(initial.value?.results || [])
 const topListings = computed(() => listings.value.filter((l: Listing) => l.isTop))
 
 const categories = [
-  { slug: 'vehicules', name: 'Véhicules', icon: '🚗' },
-  { slug: 'immobilier', name: 'Immobilier', icon: '🏠' },
-  { slug: 'electronique', name: 'Électronique', icon: '📱' },
-  { slug: 'mode-et-beaute', name: 'Mode & Beauté', icon: '👗' },
-  { slug: 'emplois', name: 'Emplois', icon: '💼' }
+  { slug: 'vehicules', name: 'Véhicules', icon: 'car' },
+  { slug: 'immobilier', name: 'Immobilier', icon: 'home' },
+  { slug: 'electronique', name: 'Électronique', icon: 'smartphone' },
+  { slug: 'mode-et-beaute', name: 'Mode & Beauté', icon: 'shirt' },
+  { slug: 'emplois', name: 'Emplois', icon: 'briefcase' }
 ]
 const cities = ['Lomé', 'Kara', 'Sokodé', 'Kpalimé', 'Atakpamé', 'Tsévié']
 
@@ -54,7 +54,7 @@ function changePage(p: number) {
 
     <nav class="category-chips">
       <button v-for="c in categories" :key="c.slug" @click="filterByCategory(c.slug)">
-        <span class="icon">{{ c.icon }}</span> {{ c.name }}
+        <Icon :name="c.icon" /> {{ c.name }}
       </button>
     </nav>
 
@@ -90,7 +90,7 @@ function changePage(p: number) {
   transition: border-color 0.15s var(--ease), transform 0.15s var(--ease);
 }
 .category-chips button:hover { border-color: var(--color-primary); transform: translateY(-1px); }
-.category-chips .icon { font-size: 16px; }
+.category-chips svg { width: 15px; height: 15px; }
 
 .empty { text-align: center; color: var(--color-ink-soft); padding: var(--space-lg) 0; }
 

@@ -1,0 +1,105 @@
+<script setup lang="ts">
+const { isOpen, close } = useAuthModal()
+const mode = ref<'login' | 'signup'>('login')
+</script>
+
+<template>
+  <Teleport to="body">
+    <Transition name="fade">
+      <div v-if="isOpen" class="overlay" @click.self="close">
+        <Transition name="pop" appear>
+          <div class="modal" role="dialog" aria-modal="true">
+            <button class="btn-icon close" @click="close" aria-label="Fermer"><Icon name="x" /></button>
+
+            <div class="badge">AT</div>
+            <h2>{{ mode === 'login' ? 'Content de vous revoir' : 'Rejoignez Annonces TG' }}</h2>
+            <p class="subtitle">
+              {{ mode === 'login' ? 'Connectez-vous pour gérer vos annonces et favoris.' : 'Créez un compte pour publier vos propres annonces.' }}
+            </p>
+
+            <div class="switcher">
+              <button :class="{ active: mode === 'login' }" @click="mode = 'login'">Se connecter</button>
+              <button :class="{ active: mode === 'signup' }" @click="mode = 'signup'">Créer un compte</button>
+            </div>
+
+            <form @submit.prevent="close">
+              <label class="field">
+                <Icon name="mail" />
+                <input type="text" placeholder="Téléphone ou email" required />
+              </label>
+              <label class="field">
+                <Icon name="lock" />
+                <input type="password" placeholder="Mot de passe" required />
+              </label>
+
+              <button type="submit" class="btn-primary submit">
+                {{ mode === 'login' ? 'Se connecter' : 'Créer mon compte' }}
+              </button>
+            </form>
+
+            <p class="alt">
+              <NuxtLink to="/connexion" @click="close">Ouvrir en page complète</NuxtLink>
+            </p>
+          </div>
+        </Transition>
+      </div>
+    </Transition>
+  </Teleport>
+</template>
+
+<style scoped>
+.overlay {
+  position: fixed; inset: 0; background: rgb(31 36 32 / 0.5); backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+  padding: var(--space-md);
+}
+.modal {
+  position: relative; background: var(--color-surface); border-radius: calc(var(--radius) + 4px);
+  padding: var(--space-lg); width: 100%; max-width: 380px;
+  box-shadow: 0 20px 60px -12px rgb(31 36 32 / 0.25);
+}
+.close { position: absolute; top: var(--space-sm); right: var(--space-sm); }
+
+.badge {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-ink));
+  color: #fff; font-weight: 700; font-size: var(--step-0);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: var(--space-sm);
+}
+h2 { margin-bottom: 4px; }
+.subtitle { color: var(--color-ink-soft); font-size: var(--step--1); margin-bottom: var(--space-md); }
+
+.switcher {
+  display: flex; background: var(--color-bg); border-radius: 999px; padding: 3px;
+  margin-bottom: var(--space-md);
+}
+.switcher button {
+  flex: 1; padding: var(--space-xs) 0; border-radius: 999px; font-size: var(--step--1);
+  color: var(--color-ink-soft); transition: background 0.15s var(--ease), color 0.15s var(--ease);
+}
+.switcher button.active { background: var(--color-surface); color: var(--color-primary-ink); font-weight: 600; box-shadow: 0 1px 3px rgb(31 36 32 / 0.1); }
+
+form { display: flex; flex-direction: column; gap: var(--space-sm); }
+.field {
+  display: flex; align-items: center; gap: var(--space-xs);
+  border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+  padding: 0 var(--space-sm);
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.field:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgb(11 110 79 / 0.12); }
+.field svg { width: 16px; height: 16px; color: var(--color-ink-soft); flex-shrink: 0; }
+.field input { flex: 1; border: none; padding: var(--space-sm) 0; background: none; }
+.field input:focus { outline: none; box-shadow: none; }
+
+.submit { margin-top: var(--space-xs); width: 100%; }
+.alt { text-align: center; margin: var(--space-md) 0 0; font-size: var(--step--1); }
+.alt a { color: var(--color-ink-soft); }
+.alt a:hover { color: var(--color-primary-ink); }
+
+.fade-enter-active, .fade-leave-active { transition: opacity 0.2s var(--ease); }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+.pop-enter-active { transition: transform 0.25s var(--ease), opacity 0.25s var(--ease); }
+.pop-leave-active { transition: transform 0.15s var(--ease), opacity 0.15s var(--ease); }
+.pop-enter-from, .pop-leave-to { opacity: 0; transform: scale(0.95) translateY(8px); }
+</style>

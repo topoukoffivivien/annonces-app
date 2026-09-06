@@ -3,5 +3,6 @@
     <Header />
     <NuxtPage />
     <Footer />
+    <LoginModal />
   </div>
 </template>
