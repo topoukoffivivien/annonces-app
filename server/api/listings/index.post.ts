@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
     images: body.images || [],
     status: contientMotInterdit ? ('rejected' as const) : ('published' as const),
     isTop: false,
+    isSold: false,
     userId: body.userId || 'anonymous',
     createdAt: new Date().toISOString()
   }

@@ -70,20 +70,20 @@ const mode = ref<'login' | 'signup'>('login')
 h2 { margin-bottom: 4px; }
 .subtitle { color: var(--color-ink-soft); font-size: var(--step--1); margin-bottom: var(--space-md); }
 
-.switcher {
-  display: flex; background: var(--color-bg); border-radius: 999px; padding: 3px;
-  margin-bottom: var(--space-md);
-}
+.switcher { display: flex; gap: var(--space-sm); margin-bottom: var(--space-md); }
 .switcher button {
-  flex: 1; padding: var(--space-xs) 0; border-radius: 999px; font-size: var(--step--1);
-  color: var(--color-ink-soft); transition: background 0.15s var(--ease), color 0.15s var(--ease);
+  flex: 1; padding: var(--space-xs) 0; border-radius: 13px;
+  background: #f1f1f1; color: var(--color-ink); border: 1px solid transparent;
+  font-size: var(--step--1); font-weight: 500;
+  transition: background 0.15s var(--ease), color 0.15s var(--ease);
 }
-.switcher button.active { background: var(--color-surface); color: var(--color-primary-ink); font-weight: 600; box-shadow: 0 1px 3px rgb(31 36 32 / 0.1); }
+.switcher button:hover { background: #e8e8e8; }
+.switcher button.active { background: rgb(11 110 79 / 0.1); color: var(--color-primary-ink); font-weight: 600; }
 
 form { display: flex; flex-direction: column; gap: var(--space-sm); }
 .field {
   display: flex; align-items: center; gap: var(--space-xs);
-  border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border); border-radius: 13px;
   padding: 0 var(--space-sm);
   transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
 }

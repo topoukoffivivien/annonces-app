@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Listing } from '~/composables/useListings'
+import { useSellers } from '~/composables/useSellers'
 
 const route = useRoute()
 const { fetchListing, fetchListings } = useListings()
@@ -29,6 +30,14 @@ const { data: relatedData } = await useAsyncData<{ count: number; results: Listi
 const relatedListings = computed<Listing[]>(() =>
   (relatedData.value?.results || []).filter((l: Listing) => l.id !== route.params.id)
 )
+
+// Vendeur de l'annonce
+const { fetchSeller } = useSellers()
+const { data: sellerData } = await useAsyncData(
+  `seller-of-${route.params.id}`,
+  () => (listing.value ? fetchSeller(listing.value.userId) : Promise.resolve(null))
+)
+const seller = computed(() => sellerData.value?.seller)
 
 // Slider automatique de la galerie
 const activeImage = ref(0)
@@ -102,6 +111,16 @@ function formatDate(iso: string) {
             {{ favorites.isFavorite(listing.id) ? 'Retiré des favoris' : 'Ajouter aux favoris' }}
           </button>
         </div>
+        <NuxtLink v-if="seller" :to="`/vendeur/${seller.id}`" class="seller-card">
+          <div class="avatar">{{ seller.avatarInitials }}</div>
+          <div>
+            <p class="seller-name">
+              {{ seller.name }}
+              <Icon v-if="seller.isVerified" name="heart-filled" class="verified" aria-hidden="true" />
+            </p>
+            <p class="seller-link">Voir le profil</p>
+          </div>
+        </NuxtLink>
         <div class="safety-card">
           <h3>Conseils de sécurité</h3>
           <ul>
@@ -173,4 +192,21 @@ function formatDate(iso: string) {
 .fav svg { width: 16px; height: 16px; }
 .safety-card h3 { font-size: var(--step-0); margin-bottom: var(--space-xs); }
 .safety-card ul { margin: 0; padding-left: 1.1em; font-size: var(--step--1); color: var(--color-ink-soft); display: flex; flex-direction: column; gap: 4px; }
+
+.seller-card {
+  display: flex; align-items: center; gap: var(--space-sm);
+  border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--space-md);
+  background: var(--color-surface); text-decoration: none; color: inherit;
+  transition: border-color 0.15s var(--ease);
+}
+.seller-card:hover { border-color: var(--color-border-strong); }
+.seller-card .avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-ink));
+  color: #fff; font-weight: 700; font-size: var(--step--1);
+  display: flex; align-items: center; justify-content: center;
+}
+.seller-name { display: flex; align-items: center; gap: 4px; margin: 0; font-weight: 600; font-size: var(--step--1); }
+.seller-name .verified { width: 13px; height: 13px; color: var(--color-primary); }
+.seller-link { margin: 2px 0 0; font-size: var(--step--1); color: var(--color-ink-soft); }
 </style>

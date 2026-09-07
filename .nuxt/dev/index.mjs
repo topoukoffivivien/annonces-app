@@ -7,8 +7,8 @@ import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent
 import { escapeHtml } from 'file://C:/Projet/annonces-app/node_modules/@vue/shared/dist/shared.cjs.js';
 import viteNodeEntry_mjs from 'file://C:/Projet/annonces-app/node_modules/@nuxt/vite-builder/dist/vite-node-entry.mjs';
 import { viteNodeFetch } from 'file://C:/Projet/annonces-app/node_modules/@nuxt/vite-builder/dist/vite-node.mjs';
-import { JSONFilePreset } from 'file://C:/Projet/annonces-app/node_modules/lowdb/lib/node.js';
 import { nanoid } from 'file://C:/Projet/annonces-app/node_modules/nanoid/index.js';
+import { JSONFilePreset } from 'file://C:/Projet/annonces-app/node_modules/lowdb/lib/node.js';
 import { promises, mkdirSync } from 'node:fs';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file://C:/Projet/annonces-app/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, encodePath, joinRelativeURL } from 'file://C:/Projet/annonces-app/node_modules/ufo/dist/index.mjs';
@@ -2164,7 +2164,22 @@ _21WlTThCRjlcL0pZFNhox4CG478Z1nsXP6CBlLEkQ_Y,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"1d015-EmLb3Ey2K/g+oWLjmjTkLJzDeFA\"",
+    "mtime": "2026-09-07T20:47:53.466Z",
+    "size": 118805,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"72a7f-UNNi2U4uEMm0LA4KrbvehenrNqA\"",
+    "mtime": "2026-09-07T20:47:53.466Z",
+    "size": 469631,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -2826,9 +2841,10 @@ async function getIslandContext(event) {
 
 const _lazy_b98le4 = () => Promise.resolve().then(function () { return _userId__get$1; });
 const _lazy_KSrc5l = () => Promise.resolve().then(function () { return boost_post$1; });
-const _lazy_k6CZb1 = () => Promise.resolve().then(function () { return _id__get$1; });
+const _lazy_k6CZb1 = () => Promise.resolve().then(function () { return _id__get$3; });
 const _lazy_gfJ9Fv = () => Promise.resolve().then(function () { return index_get$1; });
 const _lazy_qpvjYV = () => Promise.resolve().then(function () { return index_post$1; });
+const _lazy_8Z4N7L = () => Promise.resolve().then(function () { return _id__get$1; });
 const _lazy_vuwYhi = () => Promise.resolve().then(function () { return renderer; });
 
 const handlers = [
@@ -2838,6 +2854,7 @@ const handlers = [
   { route: '/api/listings/:id', handler: _lazy_k6CZb1, lazy: true, middleware: false, method: "get" },
   { route: '/api/listings', handler: _lazy_gfJ9Fv, lazy: true, middleware: false, method: "get" },
   { route: '/api/listings', handler: _lazy_qpvjYV, lazy: true, middleware: false, method: "post" },
+  { route: '/api/sellers/:id', handler: _lazy_8Z4N7L, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy_vuwYhi, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: handler$1, lazy: false, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_vuwYhi, lazy: true, middleware: false, method: undefined }
@@ -3196,6 +3213,18 @@ const defaultData = {
   credits: {
     "demo-user": 5
   },
+  sellers: [
+    {
+      id: "demo-user",
+      name: "Ama Koffi",
+      avatarInitials: "AK",
+      city: "Lom\xE9",
+      memberSince: "2023-03-01",
+      phone: "+228 90 00 00 00",
+      isVerified: true,
+      responseRate: 92
+    }
+  ],
   categories: [
     { slug: "vehicules", name: "V\xE9hicules" },
     { slug: "immobilier", name: "Immobilier" },
@@ -3215,6 +3244,7 @@ const defaultData = {
       images: [],
       status: "published",
       isTop: true,
+      isSold: false,
       userId: "demo-user",
       createdAt: (/* @__PURE__ */ new Date()).toISOString()
     },
@@ -3228,58 +3258,7 @@ const defaultData = {
       images: [],
       status: "published",
       isTop: false,
-      userId: "demo-user",
-      createdAt: (/* @__PURE__ */ new Date()).toISOString()
-    },
-    {
-      id: nanoid(8),
-      title: "V\xE9lo de montagne",
-      description: "V\xE9lo de montagne en bon \xE9tat, id\xE9al pour les randonn\xE9es.",
-      price: 45e3,
-      categorySlug: "vehicules",
-      city: "Sokod\xE9",
-      images: [],
-      status: "published",
-      isTop: false,
-      userId: "demo-user",
-      createdAt: (/* @__PURE__ */ new Date()).toISOString()
-    },
-    {
-      id: nanoid(8),
-      title: "Appartement T3 \xE0 louer",
-      description: "Appartement spacieux avec balcon, proche des commerces.",
-      price: 25e4,
-      categorySlug: "immobilier",
-      city: "Kpalim\xE9",
-      images: [],
-      status: "published",
-      isTop: false,
-      userId: "demo-user",
-      createdAt: (/* @__PURE__ */ new Date()).toISOString()
-    },
-    {
-      id: nanoid(8),
-      title: "Robe de soir\xE9e \xE9l\xE9gante",
-      description: "Robe de soir\xE9e neuve, taille M, couleur rouge.",
-      price: 3e4,
-      categorySlug: "mode-et-beaute",
-      city: "Atakpam\xE9",
-      images: [],
-      status: "published",
-      isTop: false,
-      userId: "demo-user",
-      createdAt: (/* @__PURE__ */ new Date()).toISOString()
-    },
-    {
-      id: nanoid(8),
-      title: "Offre d'emploi : D\xE9veloppeur web",
-      description: "Nous recherchons un d\xE9veloppeur web exp\xE9riment\xE9 pour rejoindre notre \xE9quipe.",
-      price: 0,
-      categorySlug: "emplois",
-      city: "Ts\xE9vi\xE9",
-      images: [],
-      status: "published",
-      isTop: false,
+      isSold: false,
       userId: "demo-user",
       createdAt: (/* @__PURE__ */ new Date()).toISOString()
     }
@@ -3344,7 +3323,7 @@ const boost_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: boost_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const _id__get = defineEventHandler(async (event) => {
+const _id__get$2 = defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
   const db = await getDb();
   const listing = db.data.listings.find((l) => l.id === id);
@@ -3354,9 +3333,9 @@ const _id__get = defineEventHandler(async (event) => {
   return listing;
 });
 
-const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _id__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _id__get
+  default: _id__get$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const index_get = defineEventHandler(async (event) => {
@@ -3412,6 +3391,7 @@ const index_post = defineEventHandler(async (event) => {
     images: body.images || [],
     status: contientMotInterdit ? "rejected" : "published",
     isTop: false,
+    isSold: false,
     userId: body.userId || "anonymous",
     createdAt: (/* @__PURE__ */ new Date()).toISOString()
   };
@@ -3426,6 +3406,22 @@ const index_post = defineEventHandler(async (event) => {
 const index_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: index_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _id__get = defineEventHandler(async (event) => {
+  const id = getRouterParam(event, "id");
+  const db = await getDb();
+  const seller = db.data.sellers.find((s) => s.id === id);
+  if (!seller) {
+    throw createError({ statusCode: 404, statusMessage: "Vendeur introuvable" });
+  }
+  const listings = db.data.listings.filter((l) => l.userId === id && l.status === "published").sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return { seller, listings, listingsCount: listings.length };
+});
+
+const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _id__get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function renderPayloadResponse(ssrContext) {

@@ -9,6 +9,7 @@ export interface Listing {
   images: string[]
   status: 'pending' | 'published' | 'rejected'
   isTop: boolean
+  isSold: boolean
   userId: string
   createdAt: string
 }

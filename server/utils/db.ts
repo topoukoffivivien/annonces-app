@@ -3,18 +3,32 @@ import { nanoid } from 'nanoid'
 import path from 'path'
 import { mkdirSync } from 'fs'
 import type { Listing } from '../types/listing'
+import type { Seller } from '../types/seller'
 
 interface DbSchema {
   listings: Listing[]
   categories: { slug: string; name: string }[]
   cities: string[]
   credits: Record<string, number>
+  sellers: Seller[]
 }
 
 const defaultData: DbSchema = {
   credits: {
     'demo-user': 5
   },
+  sellers: [
+    {
+      id: 'demo-user',
+      name: 'Ama Koffi',
+      avatarInitials: 'AK',
+      city: 'Lomé',
+      memberSince: '2023-03-01',
+      phone: '+228 90 00 00 00',
+      isVerified: true,
+      responseRate: 92
+    }
+  ],
   categories: [
     { slug: 'vehicules', name: 'Véhicules' },
     { slug: 'immobilier', name: 'Immobilier' },
@@ -34,6 +48,7 @@ const defaultData: DbSchema = {
       images: [],
       status: 'published',
       isTop: true,
+      isSold: false,
       userId: 'demo-user',
       createdAt: new Date().toISOString()
     },
@@ -47,58 +62,7 @@ const defaultData: DbSchema = {
       images: [],
       status: 'published',
       isTop: false,
-      userId: 'demo-user',
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: nanoid(8),
-      title: 'Vélo de montagne',
-      description: 'Vélo de montagne en bon état, idéal pour les randonnées.',
-      price: 45000,
-      categorySlug: 'vehicules',
-      city: 'Sokodé',
-      images: [],
-      status: 'published',
-      isTop: false,
-      userId: 'demo-user',
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: nanoid(8),
-      title: 'Appartement T3 à louer',
-      description: 'Appartement spacieux avec balcon, proche des commerces.',
-      price: 250000,
-      categorySlug: 'immobilier',
-      city: 'Kpalimé',
-      images: [],
-      status: 'published',
-      isTop: false,
-      userId: 'demo-user',
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: nanoid(8),
-      title: 'Robe de soirée élégante',
-      description: 'Robe de soirée neuve, taille M, couleur rouge.',
-      price: 30000,
-      categorySlug: 'mode-et-beaute',
-      city: 'Atakpamé',
-      images: [],
-      status: 'published',
-      isTop: false,
-      userId: 'demo-user',
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: nanoid(8),
-      title: 'Offre d\'emploi : Développeur web',
-      description: 'Nous recherchons un développeur web expérimenté pour rejoindre notre équipe.',
-      price: 0,
-      categorySlug: 'emplois',
-      city: 'Tsévié',
-      images: [],
-      status: 'published',
-      isTop: false,
+      isSold: false,
       userId: 'demo-user',
       createdAt: new Date().toISOString()
     }

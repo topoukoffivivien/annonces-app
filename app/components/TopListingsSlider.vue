@@ -75,6 +75,7 @@ function formatPrice(p: number) {
   position: absolute; top: var(--space-xs); right: var(--space-xs);
   background: rgb(255 255 255 / 0.85); z-index: 2;
 }
+.fav-btn.active { background: rgb(255 255 255 / 0.85); color: var(--color-coral); }
 .price { font-weight: 700; margin: var(--space-xs) 0 0; color: var(--color-primary-ink); }
 .title { font-size: var(--step--1); margin: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .city { font-size: var(--step--1); color: var(--color-ink-soft); margin: 0; }

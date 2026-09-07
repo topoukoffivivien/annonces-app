@@ -18,6 +18,7 @@ const categories = [
   { slug: 'emplois', name: 'Emplois', icon: 'briefcase' }
 ]
 const cities = ['Lomé', 'Kara', 'Sokodé', 'Kpalimé', 'Atakpamé', 'Tsévié']
+const selectedCategory = ref<string | null>(null)
 
 const pageSize = 8
 const currentPage = ref(1)
@@ -31,10 +32,16 @@ async function onFilter(filters: Record<string, string>) {
   const res = await fetchListings(filters)
   listings.value = res.results
   currentPage.value = 1
+  selectedCategory.value = filters.category || null
 }
 
 function filterByCategory(slug: string) {
-  onFilter({ category: slug })
+  if (selectedCategory.value === slug) {
+    selectedCategory.value = null
+    onFilter({})
+  } else {
+    onFilter({ category: slug })
+  }
 }
 
 function changePage(p: number) {
@@ -53,7 +60,12 @@ function changePage(p: number) {
     </section>
 
     <nav class="category-chips">
-      <button v-for="c in categories" :key="c.slug" @click="filterByCategory(c.slug)">
+      <button
+        v-for="c in categories"
+        :key="c.slug"
+        :class="{ active: selectedCategory === c.slug }"
+        @click="filterByCategory(c.slug)"
+      >
         <Icon :name="c.icon" /> {{ c.name }}
       </button>
     </nav>
@@ -85,11 +97,13 @@ function changePage(p: number) {
 .category-chips::-webkit-scrollbar { display: none; }
 .category-chips button {
   display: flex; align-items: center; gap: 6px; white-space: nowrap;
-  padding: var(--space-xs) var(--space-md); border: 1px solid var(--color-border);
-  border-radius: 999px; background: var(--color-surface); font-size: var(--step--1);
-  transition: border-color 0.15s var(--ease), transform 0.15s var(--ease);
+  padding: var(--space-xs) var(--space-md); border-radius: 13px;
+  background: #f1f1f1; color: var(--color-ink); border: 1px solid transparent;
+  font-size: var(--step--1); font-weight: 500;
+  transition: background 0.15s var(--ease), color 0.15s var(--ease);
 }
-.category-chips button:hover { border-color: var(--color-primary); transform: translateY(-1px); }
+.category-chips button:hover { background: #e8e8e8; }
+.category-chips button.active { background: rgb(11 110 79 / 0.1); color: var(--color-primary-ink); font-weight: 600; }
 .category-chips svg { width: 15px; height: 15px; }
 
 .empty { text-align: center; color: var(--color-ink-soft); padding: var(--space-lg) 0; }

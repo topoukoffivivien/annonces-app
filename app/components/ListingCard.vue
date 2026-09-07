@@ -22,33 +22,34 @@ function toggleFavorite() {
 </script>
 
 <template>
-  <NuxtLink :to="`/annonce/${listing.id}`" class="card">
-    <div class="thumb">
-      <img v-if="listing.images[0]" :src="listing.images[0]" :alt="listing.title" />
-      <span v-else class="placeholder">Photo</span>
-      <span v-if="listing.isTop" class="badge-top">TOP</span>
-      <button
-        class="btn-icon fav-btn"
-        :class="{ active: favorites.isFavorite(listing.id) }"
-        @click.stop.prevent="toggleFavorite"
-        :aria-label="favorites.isFavorite(listing.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'"
-      >
-        <Icon :name="favorites.isFavorite(listing.id) ? 'heart-filled' : 'heart'" />
-      </button>
-    </div>
-    <div class="info">
-      <p class="price">{{ formatPrice(listing.price) }}</p>
-      <p class="title">{{ listing.title }}</p>
-      <p class="city">{{ listing.city }}</p>
-    </div>
-  </NuxtLink>
+  <div class="card">
+    <NuxtLink :to="`/annonce/${listing.id}`" class="card-link">
+      <div class="thumb">
+        <img v-if="listing.images[0]" :src="listing.images[0]" :alt="listing.title" />
+        <span v-else class="placeholder">Photo</span>
+        <span v-if="listing.isTop" class="badge-top">TOP</span>
+      </div>
+      <div class="info">
+        <p class="price">{{ formatPrice(listing.price) }}</p>
+        <p class="title">{{ listing.title }}</p>
+        <p class="city">{{ listing.city }}</p>
+      </div>
+    </NuxtLink>
+
+    <button
+      class="btn-icon fav-btn"
+      :class="{ active: favorites.isFavorite(listing.id) }"
+      @click="toggleFavorite"
+      :aria-label="favorites.isFavorite(listing.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+    >
+      <Icon :name="favorites.isFavorite(listing.id) ? 'heart-filled' : 'heart'" />
+    </button>
+  </div>
 </template>
 
 <style scoped>
 .card {
-  display: block;
-  text-decoration: none;
-  color: inherit;
+  position: relative;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
@@ -58,6 +59,11 @@ function toggleFavorite() {
 .card:hover {
   border-color: var(--color-border-strong);
   transform: translateY(-3px);
+}
+.card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 .thumb {
   position: relative;
@@ -93,7 +99,9 @@ function toggleFavorite() {
   top: var(--space-xs);
   right: var(--space-xs);
   background: rgb(255 255 255 / 0.85);
+  z-index: 2;
 }
+.fav-btn.active { background: rgb(255 255 255 / 0.85); color: var(--color-coral); }
 .info { padding: var(--space-sm); }
 .price { font-weight: 700; font-size: var(--step-0); margin: 0; color: var(--color-primary-ink); }
 .title {
