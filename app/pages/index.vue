@@ -28,11 +28,18 @@ const paginatedListings = computed(() => {
   return listings.value.slice(start, start + pageSize)
 })
 
+const isFiltering = ref(false)
+
 async function onFilter(filters: Record<string, string>) {
-  const res = await fetchListings(filters)
-  listings.value = res.results
-  currentPage.value = 1
-  selectedCategory.value = filters.category || null
+  isFiltering.value = true
+  try {
+    const res = await fetchListings(filters)
+    listings.value = res.results
+    currentPage.value = 1
+    selectedCategory.value = filters.category || null
+  } finally {
+    isFiltering.value = false
+  }
 }
 
 function filterByCategory(slug: string) {
@@ -76,11 +83,16 @@ function changePage(p: number) {
 
     <div id="resultats">
       <div class="grid">
-        <ListingCard v-for="l in paginatedListings" :key="l.id" :listing="l" />
+        <template v-if="isFiltering">
+          <ListingCardSkeleton v-for="n in pageSize" :key="n" />
+        </template>
+        <template v-else>
+          <ListingCard v-for="l in paginatedListings" :key="l.id" :listing="l" />
+        </template>
       </div>
-      <p v-if="!listings.length" class="empty">Aucune annonce ne correspond à ces critères.</p>
+      <p v-if="!isFiltering && !listings.length" class="empty">Aucune annonce ne correspond à ces critères.</p>
 
-      <Pagination :current-page="currentPage" :total-pages="totalPages" @change="changePage" />
+      <Pagination v-if="!isFiltering" :current-page="currentPage" :total-pages="totalPages" @change="changePage" />
     </div>
   </main>
 </template>

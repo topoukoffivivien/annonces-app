@@ -1,6 +1,40 @@
 <script setup lang="ts">
 const { isOpen, close } = useAuthModal()
+const { fetch: refreshSession } = useUserSession()
 const mode = ref<'login' | 'signup'>('login')
+
+const name = ref('')
+const email = ref('')
+const password = ref('')
+const errorMsg = ref('')
+const submitting = ref(false)
+
+async function submit() {
+  errorMsg.value = ''
+  submitting.value = true
+  try {
+    if (mode.value === 'signup') {
+      await $fetch('/api/auth/register', {
+        method: 'POST',
+        body: { name: name.value, email: email.value, password: password.value }
+      })
+    } else {
+      await $fetch('/api/auth/login', {
+        method: 'POST',
+        body: { email: email.value, password: password.value }
+      })
+    }
+    await refreshSession()
+    name.value = ''
+    email.value = ''
+    password.value = ''
+    close()
+  } catch (e: any) {
+    errorMsg.value = e?.data?.statusMessage || 'Une erreur est survenue'
+  } finally {
+    submitting.value = false
+  }
+}
 </script>
 
 <template>
@@ -18,22 +52,28 @@ const mode = ref<'login' | 'signup'>('login')
             </p>
 
             <div class="switcher">
-              <button :class="{ active: mode === 'login' }" @click="mode = 'login'">Se connecter</button>
-              <button :class="{ active: mode === 'signup' }" @click="mode = 'signup'">Créer un compte</button>
+              <button :class="{ active: mode === 'login' }" @click="mode = 'login'; errorMsg = ''">Se connecter</button>
+              <button :class="{ active: mode === 'signup' }" @click="mode = 'signup'; errorMsg = ''">Créer un compte</button>
             </div>
 
-            <form @submit.prevent="close">
+            <p v-if="errorMsg" class="error-msg">{{ errorMsg }}</p>
+
+            <form @submit.prevent="submit">
+              <label v-if="mode === 'signup'" class="field">
+                <Icon name="tag" />
+                <input v-model="name" type="text" placeholder="Nom complet" required />
+              </label>
               <label class="field">
                 <Icon name="mail" />
-                <input type="text" placeholder="Téléphone ou email" required />
+                <input v-model="email" type="email" placeholder="Email" required />
               </label>
               <label class="field">
                 <Icon name="lock" />
-                <input type="password" placeholder="Mot de passe" required />
+                <input v-model="password" type="password" placeholder="Mot de passe" required minlength="6" />
               </label>
 
-              <button type="submit" class="btn-primary submit">
-                {{ mode === 'login' ? 'Se connecter' : 'Créer mon compte' }}
+              <button type="submit" class="btn-primary submit" :disabled="submitting">
+                {{ submitting ? 'Un instant...' : (mode === 'login' ? 'Se connecter' : 'Créer mon compte') }}
               </button>
             </form>
 
@@ -92,6 +132,11 @@ h2 { margin-bottom: 4px; }
 }
 .switcher button:hover { background: #e8e8e8; }
 .switcher button.active { background: rgb(11 110 79 / 0.1); color: var(--color-primary-ink); font-weight: 600; }
+
+.error-msg {
+  background: rgb(179 64 42 / 0.1); color: var(--color-danger); font-size: var(--step--1);
+  padding: var(--space-xs) var(--space-sm); border-radius: 10px; margin-bottom: var(--space-sm);
+}
 
 form { display: flex; flex-direction: column; gap: var(--space-sm); }
 .field {

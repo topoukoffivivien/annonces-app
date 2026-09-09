@@ -1,15 +1,19 @@
 <script setup lang="ts">
+import type { Listing } from '~/composables/useListings'
+import type { Seller } from '~/composables/useSellers'
+
 const route = useRoute()
 const { fetchSeller } = useSellers()
 
-const { data } = await useAsyncData(`seller-${route.params.id}`, () =>
-  fetchSeller(route.params.id as string)
+const { data, pending } = useAsyncData<{ seller: Seller; listings: Listing[]; listingsCount: number }>(
+  `seller-${route.params.id}`,
+  () => fetchSeller(route.params.id as string)
 )
 
 const seller = computed(() => data.value?.seller)
-const listings = computed(() => data.value?.listings || [])
-const activeListings = computed(() => listings.value.filter(l => !l.isSold))
-const soldListings = computed(() => listings.value.filter(l => l.isSold))
+const listings = computed<Listing[]>(() => data.value?.listings || [])
+const activeListings = computed(() => listings.value.filter((l: Listing) => !l.isSold))
+const soldListings = computed(() => listings.value.filter((l: Listing) => l.isSold))
 
 useHead({
   title: seller.value ? `${seller.value.name} — Vendeur` : 'Profil vendeur'
@@ -25,7 +29,15 @@ const activeTab = ref<'active' | 'sold' | 'apropos'>('active')
 </script>
 
 <template>
-  <main class="container" v-if="seller">
+  <main class="container" v-if="pending">
+    <div class="profile-card">
+      <div class="skeleton-avatar shimmer" />
+      <div class="skeleton-line shimmer w-50" style="margin: 0 auto var(--space-xs);" />
+      <div class="skeleton-line shimmer w-30" style="margin: 0 auto;" />
+    </div>
+  </main>
+
+  <main class="container" v-else-if="seller">
     <div class="profile-card">
       <div class="avatar">
         {{ seller.avatarInitials }}
@@ -210,5 +222,24 @@ const activeTab = ref<'active' | 'sold' | 'apropos'>('active')
 
 @media (max-width: 480px) {
   .action-btn { min-width: 0; flex: 1 1 45%; }
+}
+
+.skeleton-avatar {
+  width: 76px; height: 76px; border-radius: 50%; margin: 0 auto var(--space-sm);
+}
+.skeleton-line { height: 12px; border-radius: 4px; }
+.w-50 { width: 50%; }
+.w-30 { width: 30%; }
+.shimmer {
+  background: linear-gradient(90deg, #eeece4 25%, #f5f3ec 37%, #eeece4 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shimmer { animation: none; }
 }
 </style>

@@ -9,5 +9,6 @@ export interface Seller {
   responseRate: number // pourcentage de réponse aux messages
   email?: string
   avatarUrl?: string
-  authProvider?: 'google' | 'facebook'
+  authProvider?: 'google' | 'facebook' | 'password'
+  passwordHash?: string
 }

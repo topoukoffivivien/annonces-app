@@ -19,7 +19,11 @@ const favoriteListings = computed<Listing[]>(() =>
     <h1>Mes favoris</h1>
     <p class="subtitle">{{ favoriteListings.length }} annonce(s) enregistrée(s)</p>
 
-    <div v-if="favoriteListings.length" class="grid">
+    <div v-if="!favorites.loaded" class="grid">
+      <ListingCardSkeleton v-for="n in 4" :key="n" />
+    </div>
+
+    <div v-else-if="favoriteListings.length" class="grid">
       <ListingCard v-for="l in favoriteListings" :key="l.id" :listing="l" />
     </div>
 

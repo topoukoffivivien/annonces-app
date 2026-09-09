@@ -11,6 +11,7 @@ interface DbSchema {
   cities: string[]
   credits: Record<string, number>
   sellers: Seller[]
+  favorites: Record<string, string[]>
 }
 
 const categories = [
@@ -294,6 +295,7 @@ const defaultData: DbSchema = {
     'seller-2': 3,
     'seller-3': 1
   },
+  favorites: {},
   sellers,
   categories,
   cities,
@@ -308,6 +310,25 @@ export async function getDb() {
     mkdirSync(dir, { recursive: true })
     const file = path.join(dir, 'db.json')
     dbInstance = await JSONFilePreset<DbSchema>(file, defaultData)
+
+    // Migration : un fichier .data/db.json créé avant l'ajout d'un champ
+    // (favorites, sellers, credits...) ne le contient pas — JSONFilePreset
+    // ne fusionne pas les clés manquantes avec defaultData sur un fichier
+    // déjà existant. On complète ici sans toucher aux données déjà présentes.
+    let migrated = false
+    if (!dbInstance.data.favorites) {
+      dbInstance.data.favorites = {}
+      migrated = true
+    }
+    if (!dbInstance.data.sellers) {
+      dbInstance.data.sellers = defaultData.sellers
+      migrated = true
+    }
+    if (!dbInstance.data.credits) {
+      dbInstance.data.credits = {}
+      migrated = true
+    }
+    if (migrated) await dbInstance.write()
   }
   return dbInstance
 }

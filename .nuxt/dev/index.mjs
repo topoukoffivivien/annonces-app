@@ -1,13 +1,14 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
 import { Server } from 'node:http';
 import path, { resolve, dirname, join } from 'node:path';
-import crypto$1 from 'node:crypto';
+import crypto$1, { timingSafeEqual, randomBytes, scrypt as scrypt$1 } from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, getResponseStatus, getQuery as getQuery$1, getCookie, deleteCookie, setCookie, useSession, getRequestWebStream, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, readBody, getResponseStatusText } from 'file://C:/Projet/annonces-app/node_modules/h3/dist/index.mjs';
 import { escapeHtml } from 'file://C:/Projet/annonces-app/node_modules/@vue/shared/dist/shared.cjs.js';
 import viteNodeEntry_mjs from 'file://C:/Projet/annonces-app/node_modules/@nuxt/vite-builder/dist/vite-node-entry.mjs';
 import { viteNodeFetch } from 'file://C:/Projet/annonces-app/node_modules/@nuxt/vite-builder/dist/vite-node.mjs';
 import { nanoid } from 'file://C:/Projet/annonces-app/node_modules/nanoid/index.js';
+import { promisify } from 'node:util';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL, encodePath } from 'file://C:/Projet/annonces-app/node_modules/ufo/dist/index.mjs';
 import defu, { defuFn, defu as defu$1 } from 'file://C:/Projet/annonces-app/node_modules/defu/dist/defu.mjs';
 import { FetchError, createFetch, Headers as Headers$1 } from 'file://C:/Projet/annonces-app/node_modules/ofetch/dist/node.mjs';
@@ -2506,22 +2507,7 @@ _21WlTThCRjlcL0pZFNhox4CG478Z1nsXP6CBlLEkQ_Y,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"23495-wBRinAEpIgc0I/QvVJ9yVrXWFmI\"",
-    "mtime": "2026-09-09T14:16:37.164Z",
-    "size": 144533,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"8b9e8-HNkd7bLhOb5wLxw2hVXJ3zLOWpg\"",
-    "mtime": "2026-09-09T14:16:36.999Z",
-    "size": 571880,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3182,6 +3168,7 @@ const defaultData = {
     "seller-2": 3,
     "seller-3": 1
   },
+  favorites: {},
   sellers,
   categories,
   cities,
@@ -3194,11 +3181,25 @@ async function getDb() {
     mkdirSync(dir, { recursive: true });
     const file = path.join(dir, "db.json");
     dbInstance = await JSONFilePreset(file, defaultData);
+    let migrated = false;
+    if (!dbInstance.data.favorites) {
+      dbInstance.data.favorites = {};
+      migrated = true;
+    }
+    if (!dbInstance.data.sellers) {
+      dbInstance.data.sellers = defaultData.sellers;
+      migrated = true;
+    }
+    if (!dbInstance.data.credits) {
+      dbInstance.data.credits = {};
+      migrated = true;
+    }
+    if (migrated) await dbInstance.write();
   }
   return dbInstance;
 }
 
-function initialsFromName(name) {
+function initialsFromName$1(name) {
   return name.split(" ").filter(Boolean).slice(0, 2).map((p) => {
     var _a;
     return (_a = p[0]) == null ? void 0 : _a.toUpperCase();
@@ -3211,7 +3212,7 @@ async function upsertSellerFromOAuth(input) {
     seller = {
       id: nanoid(10),
       name: input.name,
-      avatarInitials: initialsFromName(input.name),
+      avatarInitials: initialsFromName$1(input.name),
       city: "Lom\xE9",
       memberSince: (/* @__PURE__ */ new Date()).toISOString(),
       phone: "",
@@ -3229,6 +3230,22 @@ async function upsertSellerFromOAuth(input) {
     await db.write();
   }
   return seller;
+}
+
+const scrypt = promisify(scrypt$1);
+const KEY_LENGTH = 64;
+async function hashPassword(plain) {
+  const salt = randomBytes(16).toString("hex");
+  const derived = await scrypt(plain, salt, KEY_LENGTH);
+  return `${salt}:${derived.toString("hex")}`;
+}
+async function verifyPassword(hash, plain) {
+  const [salt, key] = hash.split(":");
+  if (!salt || !key) return false;
+  const derived = await scrypt(plain, salt, KEY_LENGTH);
+  const keyBuffer = Buffer.from(key, "hex");
+  if (keyBuffer.length !== derived.length) return false;
+  return timingSafeEqual(keyBuffer, derived);
 }
 
 const sessionHooks = createHooks();
@@ -3835,8 +3852,12 @@ async function getIslandContext(event) {
 	};
 }
 
-const _lazy_b98le4 = () => Promise.resolve().then(function () { return _userId__get$1; });
+const _lazy_eTwOuS = () => Promise.resolve().then(function () { return login_post$1; });
+const _lazy_HQvkq4 = () => Promise.resolve().then(function () { return register_post$1; });
+const _lazy_b98le4 = () => Promise.resolve().then(function () { return _userId__get$3; });
 const _lazy_KSrc5l = () => Promise.resolve().then(function () { return boost_post$1; });
+const _lazy_C8yzO1 = () => Promise.resolve().then(function () { return _userId__get$1; });
+const _lazy_yE9Fyp = () => Promise.resolve().then(function () { return toggle_post$1; });
 const _lazy_k6CZb1 = () => Promise.resolve().then(function () { return _id__get$3; });
 const _lazy_gfJ9Fv = () => Promise.resolve().then(function () { return index_get$1; });
 const _lazy_qpvjYV = () => Promise.resolve().then(function () { return index_post$1; });
@@ -3847,8 +3868,12 @@ const _lazy_vuwYhi = () => Promise.resolve().then(function () { return renderer;
 
 const handlers = [
   { route: '', handler: _EjhI9W, lazy: false, middleware: true, method: undefined },
+  { route: '/api/auth/login', handler: _lazy_eTwOuS, lazy: true, middleware: false, method: "post" },
+  { route: '/api/auth/register', handler: _lazy_HQvkq4, lazy: true, middleware: false, method: "post" },
   { route: '/api/credits/:userId', handler: _lazy_b98le4, lazy: true, middleware: false, method: "get" },
   { route: '/api/credits/boost', handler: _lazy_KSrc5l, lazy: true, middleware: false, method: "post" },
+  { route: '/api/favorites/:userId', handler: _lazy_C8yzO1, lazy: true, middleware: false, method: "get" },
+  { route: '/api/favorites/toggle', handler: _lazy_yE9Fyp, lazy: true, middleware: false, method: "post" },
   { route: '/api/listings/:id', handler: _lazy_k6CZb1, lazy: true, middleware: false, method: "get" },
   { route: '/api/listings', handler: _lazy_gfJ9Fv, lazy: true, middleware: false, method: "get" },
   { route: '/api/listings', handler: _lazy_qpvjYV, lazy: true, middleware: false, method: "post" },
@@ -4135,7 +4160,86 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: styles
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const _userId__get = defineEventHandler(async (event) => {
+const login_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  if (!body.email || !body.password) {
+    throw createError({ statusCode: 400, statusMessage: "Email et mot de passe requis" });
+  }
+  const db = await getDb();
+  const email = body.email.trim().toLowerCase();
+  const seller = db.data.sellers.find((s) => s.email === email);
+  const invalidCreds = () => createError({ statusCode: 401, statusMessage: "Email ou mot de passe incorrect" });
+  if (!seller || !seller.passwordHash) {
+    throw invalidCreds();
+  }
+  const valid = await verifyPassword(seller.passwordHash, body.password);
+  if (!valid) {
+    throw invalidCreds();
+  }
+  await setUserSession(event, {
+    user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl }
+  });
+  return { success: true };
+});
+
+const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: login_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+function initialsFromName(name) {
+  return name.split(" ").filter(Boolean).slice(0, 2).map((p) => {
+    var _a;
+    return (_a = p[0]) == null ? void 0 : _a.toUpperCase();
+  }).join("") || "?";
+}
+const register_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  if (!body.name || !body.email || !body.password) {
+    throw createError({ statusCode: 400, statusMessage: "Nom, email et mot de passe requis" });
+  }
+  if (body.password.length < 6) {
+    throw createError({ statusCode: 400, statusMessage: "Le mot de passe doit contenir au moins 6 caract\xE8res" });
+  }
+  const db = await getDb();
+  const email = body.email.trim().toLowerCase();
+  let seller = db.data.sellers.find((s) => s.email === email);
+  if (seller == null ? void 0 : seller.passwordHash) {
+    throw createError({ statusCode: 409, statusMessage: "Un compte existe d\xE9j\xE0 avec cet email" });
+  }
+  const passwordHash = await hashPassword(body.password);
+  if (seller) {
+    seller.passwordHash = passwordHash;
+  } else {
+    seller = {
+      id: nanoid(10),
+      name: body.name,
+      avatarInitials: initialsFromName(body.name),
+      city: "Lom\xE9",
+      memberSince: (/* @__PURE__ */ new Date()).toISOString(),
+      phone: "",
+      isVerified: false,
+      responseRate: 0,
+      email,
+      authProvider: "password",
+      passwordHash
+    };
+    db.data.sellers.push(seller);
+    db.data.credits[seller.id] = 3;
+  }
+  await db.write();
+  await setUserSession(event, {
+    user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl }
+  });
+  return { success: true };
+});
+
+const register_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: register_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _userId__get$2 = defineEventHandler(async (event) => {
   var _a;
   const userId = getRouterParam(event, "userId");
   const db = await getDb();
@@ -4143,9 +4247,9 @@ const _userId__get = defineEventHandler(async (event) => {
   return { userId, balance };
 });
 
-const _userId__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _userId__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _userId__get
+  default: _userId__get$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const COUT_BOOST = 2;
@@ -4181,6 +4285,37 @@ const boost_post = defineEventHandler(async (event) => {
 const boost_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: boost_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _userId__get = defineEventHandler(async (event) => {
+  const userId = getRouterParam(event, "userId");
+  const db = await getDb();
+  return { ids: db.data.favorites[userId] || [] };
+});
+
+const _userId__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _userId__get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const toggle_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  if (!body.userId || !body.listingId) {
+    throw createError({ statusCode: 400, statusMessage: "userId et listingId requis" });
+  }
+  const db = await getDb();
+  const current = db.data.favorites[body.userId] || [];
+  const i = current.indexOf(body.listingId);
+  if (i === -1) current.push(body.listingId);
+  else current.splice(i, 1);
+  db.data.favorites[body.userId] = current;
+  await db.write();
+  return { ids: current };
+});
+
+const toggle_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: toggle_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const _id__get$2 = defineEventHandler(async (event) => {

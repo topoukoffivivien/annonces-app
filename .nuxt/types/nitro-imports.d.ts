@@ -124,7 +124,7 @@ declare global {
   const getValidatedRouterParams: typeof import('../../node_modules/h3').getValidatedRouterParams
   const handleCacheHeaders: typeof import('../../node_modules/h3').handleCacheHeaders
   const handleCors: typeof import('../../node_modules/h3').handleCors
-  const hashPassword: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password').hashPassword
+  const hashPassword: typeof import('../../server/utils/password').hashPassword
   const isCorsOriginAllowed: typeof import('../../node_modules/h3').isCorsOriginAllowed
   const isError: typeof import('../../node_modules/h3').isError
   const isEvent: typeof import('../../node_modules/h3').isEvent
@@ -184,7 +184,7 @@ declare global {
   const useRuntimeConfig: typeof import('../../node_modules/nitropack/dist/runtime/internal/config').useRuntimeConfig
   const useSession: typeof import('../../node_modules/h3').useSession
   const useStorage: typeof import('../../node_modules/nitropack/dist/runtime/internal/storage').useStorage
-  const verifyPassword: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password').verifyPassword
+  const verifyPassword: typeof import('../../server/utils/password').verifyPassword
   const writeEarlyHints: typeof import('../../node_modules/h3').writeEarlyHints
 }
 // for type re-export
@@ -403,7 +403,8 @@ export { defineOAuthXSUAAEventHandler } from 'C:/Projet/annonces-app/node_module
 export { defineOAuthYandexEventHandler } from 'C:/Projet/annonces-app/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/yandex';
 export { defineOAuthZitadelEventHandler } from 'C:/Projet/annonces-app/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/zitadel';
 export { getAtprotoClientMetadata } from 'C:/Projet/annonces-app/node_modules/nuxt-auth-utils/dist/runtime/server/utils/atproto';
-export { hashPassword, verifyPassword, passwordNeedsReHash } from 'C:/Projet/annonces-app/node_modules/nuxt-auth-utils/dist/runtime/server/utils/password';
+export { passwordNeedsReHash } from 'C:/Projet/annonces-app/node_modules/nuxt-auth-utils/dist/runtime/server/utils/password';
 export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clearUserSession, requireUserSession } from 'C:/Projet/annonces-app/node_modules/nuxt-auth-utils/dist/runtime/server/utils/session';
 export { upsertSellerFromOAuth } from 'C:/Projet/annonces-app/server/utils/auth';
 export { getDb } from 'C:/Projet/annonces-app/server/utils/db';
+export { hashPassword, verifyPassword } from 'C:/Projet/annonces-app/server/utils/password';

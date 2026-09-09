@@ -3,7 +3,9 @@
     "demo-user": 5,
     "seller-2": 3,
     "seller-3": 1,
-    "ItjmujHZ1M": 3
+    "ItjmujHZ1M": 3,
+    "Q7N9ifc1NO": 3,
+    "FC8x-MEUNM": 3
   },
   "sellers": [
     {
@@ -48,6 +50,32 @@
       "email": "visorash@gmail.com",
       "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocIOebRbX19La2uSEjY-ar_Jx9QTrNLOkyKwMdgavUPbs1yjKQ=s96-c",
       "authProvider": "google"
+    },
+    {
+      "id": "Q7N9ifc1NO",
+      "name": "Koffi TOPOU",
+      "avatarInitials": "KT",
+      "city": "Lomé",
+      "memberSince": "2026-09-09T21:49:30.711Z",
+      "phone": "",
+      "isVerified": false,
+      "responseRate": 0,
+      "email": "stephanek.dev@gmail.com",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocLNMyihlkGAPigp9zpVap3uVtZ2roOrfTZNan4o8GQ6w0-cs7g=s96-c",
+      "authProvider": "google"
+    },
+    {
+      "id": "FC8x-MEUNM",
+      "name": "test",
+      "avatarInitials": "T",
+      "city": "Lomé",
+      "memberSince": "2026-09-09T22:39:52.496Z",
+      "phone": "",
+      "isVerified": false,
+      "responseRate": 0,
+      "email": "test@gmail.com",
+      "authProvider": "password",
+      "passwordHash": "ed0f8ce137ee9bd957c7ab7d014b0ec2:99b6a174b291307a1798b4d1699247f5da081ce7974f2bbe141fb208dccee31990b646ac14039f11b2a4182bf2da746066ac71aec0152f9900fce6c2536d9364"
     }
   ],
   "categories": [
@@ -363,5 +391,12 @@
       "userId": "demo-user",
       "createdAt": "2026-08-28T10:21:15.554Z"
     }
-  ]
+  ],
+  "favorites": {
+    "Q7N9ifc1NO": [
+      "tV7S4meH",
+      "wU0ZwUrL",
+      "x8rYtn9L"
+    ]
+  }
 }
