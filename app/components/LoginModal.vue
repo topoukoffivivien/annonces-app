@@ -37,6 +37,19 @@ const mode = ref<'login' | 'signup'>('login')
               </button>
             </form>
 
+            <div class="divider"><span>ou</span></div>
+
+            <div class="social">
+              <a href="/auth/google" class="social-btn google">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1C3.4 21.5 7.4 24 12 24z"/><path fill="#FBBC05" d="M5.4 14.4c-.2-.7-.4-1.5-.4-2.4s.1-1.6.4-2.4V6.5H1.4C.5 8.2 0 10 0 12s.5 3.8 1.4 5.5l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.4 2.5 1.4 6.5l4 3.1c.9-2.8 3.5-4.8 6.6-4.8z"/></svg>
+                Google
+              </a>
+              <a href="/auth/facebook" class="social-btn facebook">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="#1877F2"><path d="M24 12.1C24 5.4 18.6 0 12 0S0 5.4 0 12.1C0 18.1 4.4 23.1 10.1 24v-8.4H7.1v-3.5h3v-2.6c0-3 1.8-4.6 4.5-4.6 1.3 0 2.6.2 2.6.2v2.9h-1.5c-1.5 0-1.9.9-1.9 1.9v2.2h3.3l-.5 3.5h-2.8V24C19.6 23.1 24 18.1 24 12.1z"/></svg>
+                Facebook
+              </a>
+            </div>
+
             <p class="alt">
               <NuxtLink to="/connexion" @click="close">Ouvrir en page complète</NuxtLink>
             </p>
@@ -93,6 +106,20 @@ form { display: flex; flex-direction: column; gap: var(--space-sm); }
 .field input:focus { outline: none; box-shadow: none; }
 
 .submit { margin-top: var(--space-xs); width: 100%; }
+
+.divider { display: flex; align-items: center; gap: var(--space-sm); margin: var(--space-md) 0; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
+.divider span { font-size: var(--step--1); color: var(--color-ink-soft); }
+
+.social { display: flex; gap: var(--space-sm); }
+.social-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: var(--space-xs);
+  padding: var(--space-xs) 0; border-radius: 13px; background: #f1f1f1; color: var(--color-ink);
+  font-size: var(--step--1); font-weight: 500; text-decoration: none;
+  transition: background 0.15s var(--ease);
+}
+.social-btn:hover { background: #e8e8e8; }
+
 .alt { text-align: center; margin: var(--space-md) 0 0; font-size: var(--step--1); }
 .alt a { color: var(--color-ink-soft); }
 .alt a:hover { color: var(--color-primary-ink); }

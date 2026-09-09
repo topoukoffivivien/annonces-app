@@ -19,8 +19,18 @@ declare module "nitropack/types" {
     '/api/sellers/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/sellers/[id].get').default>>>>
     }
+    '/auth/facebook': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/routes/auth/facebook.get').default>>>>
+    }
+    '/auth/google': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/routes/auth/google.get').default>>>>
+    }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/handlers/renderer').default>>>>
+    }
+    '/api/_auth/session': {
+      'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/api/session.delete').default>>>>
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/api/session.get').default>>>>
     }
     '/__nuxt_island/**': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/#internal/nuxt/island-renderer').default>>>>

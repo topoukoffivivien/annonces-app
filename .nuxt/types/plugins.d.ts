@@ -9,6 +9,7 @@ type NuxtAppInjections =
   InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/revive-payload.client.js")> &
   InjectionType<typeof import("../../node_modules/nuxt/dist/head/runtime/plugins/unhead.js")> &
   InjectionType<typeof import("../../node_modules/nuxt/dist/pages/runtime/plugins/router.js")> &
+  InjectionType<typeof import("../../node_modules/nuxt-auth-utils/dist/runtime/app/plugins/session.server.js")> &
   InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/browser-devtools-timing.client.js")> &
   InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/payload.client.js")> &
   InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/dev-server-logs.js")> &
@@ -22,6 +23,7 @@ type NuxtAppInjections =
   InjectionType<typeof import("../../node_modules/nuxt/dist/pages/runtime/plugins/check-if-page-unused.js")> &
   InjectionType<typeof import("../../node_modules/@nuxt/devtools/dist/runtime/plugins/devtools.server.js")> &
   InjectionType<typeof import("../../node_modules/@nuxt/devtools/dist/runtime/plugins/devtools.client.js")> &
+  InjectionType<typeof import("../../node_modules/nuxt-auth-utils/dist/runtime/app/plugins/session.client.js")> &
   InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/warn.dev.server.js")> &
   InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/check-if-layout-used.js")>
 
@@ -29,7 +31,7 @@ declare module '#app' {
   interface NuxtApp extends NuxtAppInjections { }
 
   interface NuxtAppLiterals {
-    pluginName: 'vue-devtools-client' | 'nuxt:revive-payload:client' | 'nuxt:head' | 'nuxt:router' | 'nuxt:browser-devtools-timing' | 'nuxt:payload' | 'nuxt:revive-payload:server' | 'nuxt:chunk-reload' | 'nuxt:island-link-navigation' | 'pinia' | 'nuxt:global-components' | 'nuxt:prefetch' | 'nuxt:checkIfPageUnused' | 'nuxt:checkIfLayoutUsed'
+    pluginName: 'vue-devtools-client' | 'nuxt:revive-payload:client' | 'nuxt:head' | 'nuxt:router' | 'session-fetch-plugin' | 'nuxt:browser-devtools-timing' | 'nuxt:payload' | 'nuxt:revive-payload:server' | 'nuxt:chunk-reload' | 'nuxt:island-link-navigation' | 'pinia' | 'nuxt:global-components' | 'nuxt:prefetch' | 'nuxt:checkIfPageUnused' | 'nuxt:checkIfLayoutUsed'
   }
 }
 

@@ -11,16 +11,17 @@
     "cap:ios": "npm run cap:sync && npx cap open ios"
   },
   "dependencies": {
-    "nuxt": "^3.14.0",
-    "pinia": "^2.2.6",
     "@pinia/nuxt": "^0.5.5",
     "lowdb": "^7.0.1",
-    "nanoid": "^5.0.7"
+    "nanoid": "^5.0.7",
+    "nuxt": "^3.14.0",
+    "nuxt-auth-utils": "^0.5.30",
+    "pinia": "^2.2.6"
   },
   "devDependencies": {
-    "@capacitor/core": "^6.1.2",
-    "@capacitor/cli": "^6.1.2",
     "@capacitor/android": "^6.1.2",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.1.2"
   }
 }

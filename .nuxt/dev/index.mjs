@@ -1,28 +1,29 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
 import { Server } from 'node:http';
 import path, { resolve, dirname, join } from 'node:path';
-import nodeCrypto from 'node:crypto';
+import crypto$1 from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, getQuery as getQuery$1, getRequestWebStream, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, readBody, getResponseStatusText } from 'file://C:/Projet/annonces-app/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, getResponseStatus, getQuery as getQuery$1, getCookie, deleteCookie, setCookie, useSession, getRequestWebStream, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, readBody, getResponseStatusText } from 'file://C:/Projet/annonces-app/node_modules/h3/dist/index.mjs';
 import { escapeHtml } from 'file://C:/Projet/annonces-app/node_modules/@vue/shared/dist/shared.cjs.js';
 import viteNodeEntry_mjs from 'file://C:/Projet/annonces-app/node_modules/@nuxt/vite-builder/dist/vite-node-entry.mjs';
 import { viteNodeFetch } from 'file://C:/Projet/annonces-app/node_modules/@nuxt/vite-builder/dist/vite-node.mjs';
 import { nanoid } from 'file://C:/Projet/annonces-app/node_modules/nanoid/index.js';
+import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL, encodePath } from 'file://C:/Projet/annonces-app/node_modules/ufo/dist/index.mjs';
+import defu, { defuFn, defu as defu$1 } from 'file://C:/Projet/annonces-app/node_modules/defu/dist/defu.mjs';
+import { FetchError, createFetch, Headers as Headers$1 } from 'file://C:/Projet/annonces-app/node_modules/ofetch/dist/node.mjs';
+import { snakeCase, upperFirst } from 'file://C:/Projet/annonces-app/node_modules/scule/dist/index.mjs';
+import { getRandomValues } from 'file://C:/Projet/annonces-app/node_modules/uncrypto/dist/crypto.node.mjs';
 import { JSONFilePreset } from 'file://C:/Projet/annonces-app/node_modules/lowdb/lib/node.js';
 import { promises, mkdirSync } from 'node:fs';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file://C:/Projet/annonces-app/node_modules/vue-bundle-renderer/dist/runtime.mjs';
-import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, encodePath, joinRelativeURL } from 'file://C:/Projet/annonces-app/node_modules/ufo/dist/index.mjs';
 import { renderToString } from 'file://C:/Projet/annonces-app/node_modules/vue/server-renderer/index.mjs';
 import { klona } from 'file://C:/Projet/annonces-app/node_modules/klona/dist/index.mjs';
-import defu, { defuFn } from 'file://C:/Projet/annonces-app/node_modules/defu/dist/defu.mjs';
 import destr, { destr as destr$1 } from 'file://C:/Projet/annonces-app/node_modules/destr/dist/index.mjs';
-import { snakeCase } from 'file://C:/Projet/annonces-app/node_modules/scule/dist/index.mjs';
 import { createHead as createHead$1, propsToString, renderSSRHead } from 'file://C:/Projet/annonces-app/node_modules/unhead/dist/server.mjs';
 import { stringify, uneval } from 'file://C:/Projet/annonces-app/node_modules/devalue/index.js';
 import { isVNode, isRef, toValue } from 'file://C:/Projet/annonces-app/node_modules/vue/index.mjs';
 import { DeprecationsPlugin, PromisesPlugin, TemplateParamsPlugin, AliasSortingPlugin } from 'file://C:/Projet/annonces-app/node_modules/unhead/dist/plugins.mjs';
-import { createHooks } from 'file://C:/Projet/annonces-app/node_modules/hookable/dist/index.mjs';
-import { createFetch, Headers as Headers$1 } from 'file://C:/Projet/annonces-app/node_modules/ofetch/dist/node.mjs';
+import { createHooks as createHooks$1 } from 'file://C:/Projet/annonces-app/node_modules/hookable/dist/index.mjs';
 import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file://C:/Projet/annonces-app/node_modules/node-mock-http/dist/index.mjs';
 import { createStorage, prefixStorage } from 'file://C:/Projet/annonces-app/node_modules/unstorage/dist/index.mjs';
 import unstorage_47drivers_47fs from 'file://C:/Projet/annonces-app/node_modules/unstorage/drivers/fs.mjs';
@@ -40,6 +41,7 @@ import { captureRawStackTrace, parseRawStackTrace } from 'file://C:/Projet/annon
 import _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw from 'file://C:/Projet/annonces-app/node_modules/@nuxt/vite-builder/dist/fix-stacktrace.mjs';
 import { fileURLToPath } from 'node:url';
 import { dirname as dirname$1, resolve as resolve$1 } from 'file://C:/Projet/annonces-app/node_modules/pathe/dist/index.mjs';
+import { createHooks } from 'file://C:/Projet/annonces-app/node_modules/nuxt-auth-utils/node_modules/hookable/dist/index.mjs';
 import { walkResolver } from 'file://C:/Projet/annonces-app/node_modules/unhead/dist/utils.mjs';
 
 const serverAssets = [{"baseName":"server","dir":"C:/Projet/annonces-app/server/assets"}];
@@ -655,7 +657,330 @@ const _inlineRuntimeConfig = {
     }
   },
   "public": {
-    "apiBase": "/api"
+    "apiBase": "/api",
+    "auth": {
+      "loadStrategy": "server-first"
+    }
+  },
+  "session": {
+    "name": "nuxt-session",
+    "password": "",
+    "cookie": {
+      "sameSite": "lax"
+    }
+  },
+  "hash": {
+    "scrypt": {}
+  },
+  "webauthn": {
+    "register": {},
+    "authenticate": {}
+  },
+  "oauth": {
+    "gitea": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": "",
+      "baseURL": ""
+    },
+    "box": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": "",
+      "scope": []
+    },
+    "github": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "gitlab": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": "",
+      "baseURL": "https://gitlab.com"
+    },
+    "spotify": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "google": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "twitch": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "auth0": {
+      "clientId": "",
+      "clientSecret": "",
+      "domain": "",
+      "audience": "",
+      "redirectURL": ""
+    },
+    "workos": {
+      "clientId": "",
+      "clientSecret": "",
+      "connectionId": "",
+      "screenHint": "",
+      "redirectURL": ""
+    },
+    "microsoft": {
+      "clientId": "",
+      "clientSecret": "",
+      "tenant": "",
+      "scope": [],
+      "authorizationURL": "",
+      "tokenURL": "",
+      "userURL": "",
+      "redirectURL": ""
+    },
+    "azureb2c": {
+      "clientId": "",
+      "policy": "",
+      "tenant": "",
+      "scope": [],
+      "authorizationURL": "",
+      "tokenURL": "",
+      "userURL": "",
+      "redirectURL": ""
+    },
+    "discord": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "battledotnet": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "bluesky": {
+      "clientMetadataFilename": "",
+      "clientName": "",
+      "clientUri": "",
+      "logoUri": "",
+      "policyUri": "",
+      "tosUri": "",
+      "scope": [
+        "atproto"
+      ],
+      "grantTypes": [
+        "authorization_code"
+      ],
+      "responseTypes": [
+        "code"
+      ],
+      "applicationType": "web",
+      "redirectUris": "",
+      "dpopBoundAccessTokens": true,
+      "tokenEndpointAuthMethod": "none"
+    },
+    "keycloak": {
+      "clientId": "",
+      "clientSecret": "",
+      "serverUrl": "",
+      "serverUrlInternal": "",
+      "realm": "",
+      "redirectURL": ""
+    },
+    "linear": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "linkedin": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "cognito": {
+      "clientId": "",
+      "clientSecret": "",
+      "region": "",
+      "userPoolId": "",
+      "redirectURL": ""
+    },
+    "facebook": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "instagram": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "paypal": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "steam": {
+      "apiKey": "",
+      "redirectURL": ""
+    },
+    "x": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "xsuaa": {
+      "clientId": "",
+      "clientSecret": "",
+      "domain": "",
+      "redirectURL": ""
+    },
+    "vk": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "yandex": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "tiktok": {
+      "clientKey": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "dropbox": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "polar": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "zitadel": {
+      "clientId": "",
+      "clientSecret": "",
+      "domain": "",
+      "redirectURL": ""
+    },
+    "authentik": {
+      "clientId": "",
+      "clientSecret": "",
+      "domain": "",
+      "redirectURL": ""
+    },
+    "seznam": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "strava": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "hubspot": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "line": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "atlassian": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "apple": {
+      "teamId": "",
+      "keyId": "",
+      "privateKey": "",
+      "redirectURL": "",
+      "clientId": ""
+    },
+    "kick": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": ""
+    },
+    "livechat": {
+      "clientId": "",
+      "clientSecret": ""
+    },
+    "salesforce": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": "",
+      "baseURL": "",
+      "scope": ""
+    },
+    "slack": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": "",
+      "scope": ""
+    },
+    "heroku": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": "",
+      "scope": ""
+    },
+    "roblox": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": "",
+      "scope": ""
+    },
+    "okta": {
+      "clientId": "",
+      "clientSecret": "",
+      "domain": "",
+      "audience": "",
+      "scope": [],
+      "redirectURL": ""
+    },
+    "ory": {
+      "clientId": "",
+      "clientSecret": "",
+      "sdkURL": "",
+      "redirectURL": "",
+      "scope": [],
+      "authorizationURL": "",
+      "tokenURL": "",
+      "userURL": ""
+    },
+    "shopifyCustomer": {
+      "shopDomain": "",
+      "clientId": "",
+      "redirectURL": "",
+      "scope": []
+    },
+    "oidc": {
+      "clientId": "",
+      "clientSecret": "",
+      "openidConfig": "",
+      "redirectURL": "",
+      "scope": []
+    },
+    "osu": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": "",
+      "scope": []
+    },
+    "riotgames": {
+      "clientId": "",
+      "clientSecret": "",
+      "redirectURL": "",
+      "scope": []
+    }
   }
 };
 const envOptions = {
@@ -2057,6 +2382,22 @@ const _XPoJlqNMg69zIcqQPkxEDvpa86qxrxjqAj_EiHquCLA = (function(nitro) {
   });
 });
 
+const _g_tOgku8vx4YFd5jnv8Y6QxXYaxVTHz5I1CBvI8y6y4 = defineNitroPlugin((nitroApp) => {
+  if (process.env.NUXT_OAUTH_FACEBOOK_CLIENT_ID && process.env.NUXT_OAUTH_FACEBOOK_CLIENT_SECRET || process.env.NUXT_OAUTH_INSTAGRAM_CLIENT_ID && process.env.NUXT_OAUTH_INSTAGRAM_CLIENT_SECRET) {
+    nitroApp.hooks.hook("render:html", (html) => {
+      html.head.unshift(`
+      <script>
+        if (window.location.hash === "#_=_"){
+          history.replaceState
+              ? history.replaceState(null, null, window.location.href.split("#")[0])
+              : window.location.hash = "";
+        }
+      <\/script>
+    `);
+    });
+  }
+});
+
 const rootDir = "C:/Projet/annonces-app";
 
 const appHead = {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"name":"description","content":"Petites annonces gratuites au Togo"}],"link":[],"style":[],"script":[],"noscript":[],"title":"Annonces TG"};
@@ -2160,26 +2501,12 @@ function onConsoleLog(callback) {
 
 const plugins = [
   _XPoJlqNMg69zIcqQPkxEDvpa86qxrxjqAj_EiHquCLA,
+_g_tOgku8vx4YFd5jnv8Y6QxXYaxVTHz5I1CBvI8y6y4,
 _21WlTThCRjlcL0pZFNhox4CG478Z1nsXP6CBlLEkQ_Y,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"1d015-EmLb3Ey2K/g+oWLjmjTkLJzDeFA\"",
-    "mtime": "2026-09-07T20:47:53.466Z",
-    "size": 118805,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"72a7f-UNNi2U4uEMm0LA4KrbvehenrNqA\"",
-    "mtime": "2026-09-07T20:47:53.466Z",
-    "size": 469631,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -2266,6 +2593,674 @@ const _EjhI9W = eventHandler((event) => {
     setResponseHeader(event, "Content-Length", asset.size);
   }
   return readAsset(id);
+});
+
+function defineNitroPlugin(def) {
+  return def;
+}
+
+function defineRenderHandler(render) {
+  const runtimeConfig = useRuntimeConfig();
+  return eventHandler(async (event) => {
+    const nitroApp = useNitroApp();
+    const ctx = { event, render, response: void 0 };
+    await nitroApp.hooks.callHook("render:before", ctx);
+    if (!ctx.response) {
+      if (event.path === `${runtimeConfig.app.baseURL}favicon.ico`) {
+        setResponseHeader(event, "Content-Type", "image/x-icon");
+        return send(
+          event,
+          "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        );
+      }
+      ctx.response = await ctx.render(event);
+      if (!ctx.response) {
+        const _currentStatus = getResponseStatus(event);
+        setResponseStatus(event, _currentStatus === 200 ? 500 : _currentStatus);
+        return send(
+          event,
+          "No response returned from render handler: " + event.path
+        );
+      }
+    }
+    await nitroApp.hooks.callHook("render:response", ctx.response, ctx);
+    if (ctx.response.headers) {
+      setResponseHeaders(event, ctx.response.headers);
+    }
+    if (ctx.response.statusCode || ctx.response.statusMessage) {
+      setResponseStatus(
+        event,
+        ctx.response.statusCode,
+        ctx.response.statusMessage
+      );
+    }
+    return ctx.response.body;
+  });
+}
+
+const scheduledTasks = false;
+
+const tasks = {
+  
+};
+
+const __runningTasks__ = {};
+async function runTask(name, {
+  payload = {},
+  context = {}
+} = {}) {
+  if (__runningTasks__[name]) {
+    return __runningTasks__[name];
+  }
+  if (!(name in tasks)) {
+    throw createError({
+      message: `Task \`${name}\` is not available!`,
+      statusCode: 404
+    });
+  }
+  if (!tasks[name].resolve) {
+    throw createError({
+      message: `Task \`${name}\` is not implemented!`,
+      statusCode: 501
+    });
+  }
+  const handler = await tasks[name].resolve();
+  const taskEvent = { name, payload, context };
+  __runningTasks__[name] = handler.run(taskEvent);
+  try {
+    const res = await __runningTasks__[name];
+    return res;
+  } finally {
+    delete __runningTasks__[name];
+  }
+}
+
+function buildAssetsDir() {
+	
+	return useRuntimeConfig().app.buildAssetsDir;
+}
+function buildAssetsURL(...path) {
+	return joinRelativeURL(publicAssetsURL(), buildAssetsDir(), ...path);
+}
+function publicAssetsURL(...path) {
+	
+	const app = useRuntimeConfig().app;
+	const publicBase = app.cdnURL || app.baseURL;
+	return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
+}
+
+const OAUTH_COOKIE_MAX_AGE = 60 * 10;
+function getOAuthRedirectURL(event) {
+  const requestURL = getRequestURL(event);
+  return `${requestURL.protocol}//${requestURL.host}${requestURL.pathname}`;
+}
+async function requestAccessToken(url, options) {
+  const headers = {
+    "Content-Type": "application/x-www-form-urlencoded",
+    ...options.headers
+  };
+  const body = headers["Content-Type"] === "application/x-www-form-urlencoded" ? new URLSearchParams(
+    options.body || options.params || {}
+  ).toString() : options.body;
+  return $fetch(url, {
+    method: "POST",
+    headers,
+    body
+  }).catch((error) => {
+    if (error instanceof FetchError && error.status === 401) {
+      return error.data;
+    }
+    throw error;
+  });
+}
+function handleAccessTokenErrorResponse(event, oauthProvider, oauthError, onError) {
+  const message = `${upperFirst(oauthProvider)} login failed: ${oauthError.error_description || oauthError.error || "Unknown error"}`;
+  const error = createError({
+    statusCode: 401,
+    message,
+    data: oauthError
+  });
+  if (!onError) throw error;
+  return onError(event, error);
+}
+function handleMissingConfiguration(event, provider, missingKeys, onError) {
+  const environmentVariables = missingKeys.map((key) => `NUXT_OAUTH_${provider.toUpperCase()}_${snakeCase(key).toUpperCase()}`);
+  const error = createError({
+    statusCode: 500,
+    message: `Missing ${environmentVariables.join(" or ")} env ${missingKeys.length > 1 ? "variables" : "variable"}.`
+  });
+  if (!onError) throw error;
+  return onError(event, error);
+}
+function handleInvalidState(event, provider, onError) {
+  const message = `${upperFirst(provider)} login failed: state mismatch`;
+  const error = createError({
+    statusCode: 500,
+    message
+  });
+  if (!onError) throw error;
+  return onError(event, error);
+}
+function encodeBase64Url(input) {
+  return btoa(String.fromCharCode.apply(null, input)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+function getRandomBytes(size = 32) {
+  return getRandomValues(new Uint8Array(size));
+}
+async function handleState(event, options = {}) {
+  const query = getQuery$1(event);
+  const isCallback = options.isCallback ?? Boolean(query.code);
+  if (isCallback) {
+    const state2 = getCookie(event, "nuxt-auth-state");
+    deleteCookie(event, "nuxt-auth-state", { path: "/" });
+    return state2;
+  }
+  const state = encodeBase64Url(getRandomBytes());
+  const sameSite = options.sameSite || "lax";
+  setCookie(event, "nuxt-auth-state", state, {
+    httpOnly: true,
+    secure: sameSite === "none" || false,
+    sameSite,
+    maxAge: OAUTH_COOKIE_MAX_AGE,
+    path: "/"
+  });
+  return state;
+}
+
+function defineOAuthFacebookEventHandler({
+  config,
+  onSuccess,
+  onError
+}) {
+  return eventHandler(async (event) => {
+    config = defu$1(config, useRuntimeConfig(event).oauth?.facebook, {
+      authorizationURL: "https://www.facebook.com/v19.0/dialog/oauth",
+      tokenURL: "https://graph.facebook.com/v19.0/oauth/access_token",
+      authorizationParams: {}
+    });
+    const query = getQuery$1(event);
+    if (query.error) {
+      const error = createError({
+        statusCode: 401,
+        message: `Facebook login failed: ${query.error || "Unknown error"}`,
+        data: query
+      });
+      if (!onError) throw error;
+      return onError(event, error);
+    }
+    if (!config.clientId || !config.clientSecret) {
+      return handleMissingConfiguration(event, "facebook", ["clientId", "clientSecret"], onError);
+    }
+    const redirectURL = config.redirectURL || getOAuthRedirectURL(event);
+    const state = await handleState(event);
+    if (!query.code) {
+      config.scope = [...new Set(config.scope)];
+      return sendRedirect(
+        event,
+        withQuery(config.authorizationURL, {
+          client_id: config.clientId,
+          redirect_uri: redirectURL,
+          scope: config.scope.join(" "),
+          ...config.authorizationParams,
+          state
+        })
+      );
+    }
+    if (query.state !== state) {
+      return handleInvalidState(event, "facebook", onError);
+    }
+    const tokens = await requestAccessToken(config.tokenURL, {
+      body: {
+        client_id: config.clientId,
+        client_secret: config.clientSecret,
+        grant_type: "authorization_code",
+        redirect_uri: redirectURL,
+        code: query.code
+      }
+    });
+    if (tokens.error) {
+      return handleAccessTokenErrorResponse(event, "facebook", tokens, onError);
+    }
+    const accessToken = tokens.access_token;
+    config.fields = [...new Set(config.fields || ["id", "name"])];
+    const fields = config.fields.join(",");
+    const user = await $fetch(
+      `https://graph.facebook.com/v19.0/me?fields=${fields}&access_token=${accessToken}`
+    );
+    if (!user) {
+      const error = createError({
+        statusCode: 500,
+        message: "Could not get Facebook user",
+        data: tokens
+      });
+      if (!onError) throw error;
+      return onError(event, error);
+    }
+    return onSuccess(event, {
+      user,
+      tokens
+    });
+  });
+}
+
+function defineOAuthGoogleEventHandler({
+  config,
+  onSuccess,
+  onError
+}) {
+  return eventHandler(async (event) => {
+    config = defu$1(config, useRuntimeConfig(event).oauth?.google, {
+      authorizationURL: "https://accounts.google.com/o/oauth2/v2/auth",
+      tokenURL: "https://oauth2.googleapis.com/token",
+      userURL: "https://www.googleapis.com/oauth2/v3/userinfo",
+      authorizationParams: {}
+    });
+    const query = getQuery$1(event);
+    if (!config.clientId || !config.clientSecret) {
+      return handleMissingConfiguration(event, "google", ["clientId", "clientSecret"], onError);
+    }
+    const redirectURL = config.redirectURL || getOAuthRedirectURL(event);
+    const state = await handleState(event);
+    if (!query.code) {
+      config.scope = config.scope || ["email", "profile"];
+      return sendRedirect(
+        event,
+        withQuery(config.authorizationURL, {
+          response_type: "code",
+          client_id: config.clientId,
+          redirect_uri: redirectURL,
+          scope: config.scope.join(" "),
+          ...config.authorizationParams,
+          state
+        })
+      );
+    }
+    if (query.state !== state) {
+      return handleInvalidState(event, "google", onError);
+    }
+    const tokens = await requestAccessToken(config.tokenURL, {
+      body: {
+        grant_type: "authorization_code",
+        code: query.code,
+        client_id: config.clientId,
+        client_secret: config.clientSecret,
+        redirect_uri: redirectURL
+      }
+    });
+    if (tokens.error) {
+      return handleAccessTokenErrorResponse(event, "google", tokens, onError);
+    }
+    const accessToken = tokens.access_token;
+    const user = await $fetch(
+      config.userURL,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+    return onSuccess(event, {
+      tokens,
+      user
+    });
+  });
+}
+
+const categories = [
+  { slug: "vehicules", name: "V\xE9hicules" },
+  { slug: "immobilier", name: "Immobilier" },
+  { slug: "electronique", name: "\xC9lectronique" },
+  { slug: "mode-et-beaute", name: "Mode & Beaut\xE9" },
+  { slug: "emplois", name: "Emplois" }
+];
+const cities = ["Lom\xE9", "Kara", "Sokod\xE9", "Kpalim\xE9", "Atakpam\xE9", "Ts\xE9vi\xE9"];
+const sellers = [
+  {
+    id: "demo-user",
+    name: "Ama Koffi",
+    avatarInitials: "AK",
+    city: "Lom\xE9",
+    memberSince: "2023-03-01",
+    phone: "+228 90 00 00 00",
+    isVerified: true,
+    responseRate: 92
+  },
+  {
+    id: "seller-2",
+    name: "Kossi Mensah",
+    avatarInitials: "KM",
+    city: "Kara",
+    memberSince: "2022-08-15",
+    phone: "+228 91 22 33 44",
+    isVerified: true,
+    responseRate: 78
+  },
+  {
+    id: "seller-3",
+    name: "Adjoa Fiati",
+    avatarInitials: "AF",
+    city: "Sokod\xE9",
+    memberSince: "2024-01-20",
+    phone: "+228 92 55 66 77",
+    isVerified: false,
+    responseRate: 60
+  }
+];
+function makeListing(partial) {
+  var _a, _b, _c;
+  const createdAt = /* @__PURE__ */ new Date();
+  createdAt.setDate(createdAt.getDate() - ((_a = partial.daysAgo) != null ? _a : 0));
+  return {
+    id: nanoid(8),
+    title: partial.title,
+    description: partial.description,
+    price: partial.price,
+    categorySlug: partial.categorySlug,
+    city: partial.city,
+    images: partial.images || [],
+    status: "published",
+    isTop: (_b = partial.isTop) != null ? _b : false,
+    isSold: (_c = partial.isSold) != null ? _c : false,
+    userId: partial.userId,
+    createdAt: createdAt.toISOString()
+  };
+}
+const listings = [
+  // Véhicules
+  makeListing({
+    title: "Toyota Corolla 2016, climatis\xE9e",
+    description: "V\xE9hicule bien entretenu, vidange \xE0 jour, papiers en r\xE8gle. Visible \xE0 Lom\xE9 Agbal\xE9p\xE9dogan.",
+    price: 65e5,
+    categorySlug: "vehicules",
+    city: "Lom\xE9",
+    images: ["https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600"],
+    isTop: true,
+    userId: "demo-user",
+    daysAgo: 1
+  }),
+  makeListing({
+    title: "Moto Djakarta 125cc",
+    description: "Moto en bon \xE9tat, id\xE9ale pour la ville. Prix l\xE9g\xE8rement n\xE9gociable.",
+    price: 45e4,
+    categorySlug: "vehicules",
+    city: "Kara",
+    images: ["https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600"],
+    userId: "seller-2",
+    daysAgo: 4
+  }),
+  makeListing({
+    title: "Toyota Hilux 4x4, 2014",
+    description: "Pick-up solide, parfait pour chantier ou brousse. Moteur diesel.",
+    price: 98e5,
+    categorySlug: "vehicules",
+    city: "Sokod\xE9",
+    images: ["https://images.unsplash.com/photo-1583267746897-2cf415887172?w=600"],
+    userId: "seller-3",
+    isSold: true,
+    daysAgo: 20
+  }),
+  makeListing({
+    title: "V\xE9lo VTT tout-terrain",
+    description: "V\xE9lo robuste, pneus increvables, freins \xE0 disque.",
+    price: 85e3,
+    categorySlug: "vehicules",
+    city: "Lom\xE9",
+    images: ["https://images.unsplash.com/photo-1544191696-15693072b5a2?w=600"],
+    userId: "demo-user",
+    isSold: true,
+    daysAgo: 30
+  }),
+  // Immobilier
+  makeListing({
+    title: "Terrain 1/2 lot \xE0 Ago\xE8",
+    description: "Terrain viabilis\xE9 proche du goudron, titre foncier disponible.",
+    price: 12e6,
+    categorySlug: "immobilier",
+    city: "Lom\xE9",
+    images: ["https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600"],
+    isTop: true,
+    userId: "demo-user",
+    daysAgo: 2
+  }),
+  makeListing({
+    title: "Appartement 3 pi\xE8ces \xE0 louer",
+    description: "Quartier calme, eau et \xE9lectricit\xE9 disponibles, avance 6 mois.",
+    price: 12e4,
+    categorySlug: "immobilier",
+    city: "Lom\xE9",
+    images: ["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600"],
+    userId: "seller-2",
+    daysAgo: 6
+  }),
+  makeListing({
+    title: "Villa duplex 5 chambres",
+    description: "Villa moderne avec piscine, garage 2 voitures, quartier r\xE9sidentiel.",
+    price: 45e6,
+    categorySlug: "immobilier",
+    city: "Kara",
+    images: ["https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600"],
+    isTop: true,
+    userId: "seller-3",
+    daysAgo: 8
+  }),
+  makeListing({
+    title: "Studio meubl\xE9 \xE0 Kpalim\xE9",
+    description: "Id\xE9al \xE9tudiant ou jeune actif, proche du march\xE9 central.",
+    price: 45e3,
+    categorySlug: "immobilier",
+    city: "Kpalim\xE9",
+    images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600"],
+    userId: "demo-user",
+    isSold: true,
+    daysAgo: 25
+  }),
+  // Électronique
+  makeListing({
+    title: "Samsung Galaxy A15 128Go",
+    description: "T\xE9l\xE9phone neuf sous emballage, garantie 1 an.",
+    price: 95e3,
+    categorySlug: "electronique",
+    city: "Kara",
+    images: ["https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=600"],
+    userId: "demo-user",
+    daysAgo: 1
+  }),
+  makeListing({
+    title: "MacBook Air M1 2020",
+    description: "Excellent \xE9tat, batterie \xE0 91%, chargeur d'origine inclus.",
+    price: 48e4,
+    categorySlug: "electronique",
+    city: "Lom\xE9",
+    images: ["https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600"],
+    isTop: true,
+    userId: "seller-2",
+    daysAgo: 3
+  }),
+  makeListing({
+    title: "T\xE9l\xE9viseur LED 43 pouces",
+    description: "Smart TV, Wifi int\xE9gr\xE9, t\xE9l\xE9commande fournie.",
+    price: 14e4,
+    categorySlug: "electronique",
+    city: "Sokod\xE9",
+    images: ["https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600"],
+    userId: "seller-3",
+    daysAgo: 5
+  }),
+  makeListing({
+    title: "Casque audio Bluetooth JBL",
+    description: "Autonomie 20h, r\xE9duction de bruit active.",
+    price: 25e3,
+    categorySlug: "electronique",
+    city: "Lom\xE9",
+    images: ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600"],
+    userId: "demo-user",
+    isSold: true,
+    daysAgo: 15
+  }),
+  // Mode & Beauté
+  makeListing({
+    title: "Robe traditionnelle wax sur-mesure",
+    description: "Confection artisanale, tissu wax hollandais authentique.",
+    price: 35e3,
+    categorySlug: "mode-et-beaute",
+    city: "Lom\xE9",
+    images: ["https://images.unsplash.com/photo-1596783074918-c84cb06531ca?w=600"],
+    userId: "seller-3",
+    daysAgo: 2
+  }),
+  makeListing({
+    title: "Sac \xE0 main cuir v\xE9ritable",
+    description: "Import de qualit\xE9, plusieurs coloris disponibles.",
+    price: 28e3,
+    categorySlug: "mode-et-beaute",
+    city: "Kara",
+    images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600"],
+    userId: "seller-2",
+    daysAgo: 7
+  }),
+  makeListing({
+    title: "Baskets Nike Air Max, pointure 42",
+    description: "Neuves, jamais port\xE9es, bo\xEEte d'origine.",
+    price: 42e3,
+    categorySlug: "mode-et-beaute",
+    city: "Lom\xE9",
+    images: ["https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600"],
+    isTop: true,
+    userId: "demo-user",
+    daysAgo: 4
+  }),
+  // Emplois
+  makeListing({
+    title: "Recherche comptable exp\xE9riment\xE9(e)",
+    description: "CDI, exp\xE9rience minimum 3 ans, ma\xEEtrise Excel et Sage.",
+    price: 25e4,
+    categorySlug: "emplois",
+    city: "Lom\xE9",
+    images: [],
+    userId: "seller-2",
+    daysAgo: 1
+  }),
+  makeListing({
+    title: "Chauffeur particulier temps plein",
+    description: "Permis cat\xE9gorie B, minimum 5 ans d'exp\xE9rience, disponible imm\xE9diatement.",
+    price: 9e4,
+    categorySlug: "emplois",
+    city: "Kara",
+    images: [],
+    userId: "seller-3",
+    daysAgo: 9
+  }),
+  makeListing({
+    title: "Vendeuse boutique de v\xEAtements",
+    description: "Bonne pr\xE9sentation, sens du contact client, temps partiel possible.",
+    price: 6e4,
+    categorySlug: "emplois",
+    city: "Sokod\xE9",
+    images: [],
+    userId: "demo-user",
+    daysAgo: 12
+  })
+];
+const defaultData = {
+  credits: {
+    "demo-user": 5,
+    "seller-2": 3,
+    "seller-3": 1
+  },
+  sellers,
+  categories,
+  cities,
+  listings
+};
+let dbInstance = null;
+async function getDb() {
+  if (!dbInstance) {
+    const dir = path.join(process.cwd(), ".data");
+    mkdirSync(dir, { recursive: true });
+    const file = path.join(dir, "db.json");
+    dbInstance = await JSONFilePreset(file, defaultData);
+  }
+  return dbInstance;
+}
+
+function initialsFromName(name) {
+  return name.split(" ").filter(Boolean).slice(0, 2).map((p) => {
+    var _a;
+    return (_a = p[0]) == null ? void 0 : _a.toUpperCase();
+  }).join("") || "?";
+}
+async function upsertSellerFromOAuth(input) {
+  const db = await getDb();
+  let seller = db.data.sellers.find((s) => s.email === input.email);
+  if (!seller) {
+    seller = {
+      id: nanoid(10),
+      name: input.name,
+      avatarInitials: initialsFromName(input.name),
+      city: "Lom\xE9",
+      memberSince: (/* @__PURE__ */ new Date()).toISOString(),
+      phone: "",
+      isVerified: false,
+      responseRate: 0,
+      email: input.email,
+      avatarUrl: input.avatarUrl,
+      authProvider: input.provider
+    };
+    db.data.sellers.push(seller);
+    db.data.credits[seller.id] = 3;
+    await db.write();
+  } else if (input.avatarUrl && seller.avatarUrl !== input.avatarUrl) {
+    seller.avatarUrl = input.avatarUrl;
+    await db.write();
+  }
+  return seller;
+}
+
+const sessionHooks = createHooks();
+async function getUserSession(event) {
+  const session = await _useSession(event);
+  return {
+    ...session.data,
+    id: session.id
+  };
+}
+async function setUserSession(event, data, config) {
+  const session = await _useSession(event, config);
+  await session.update(defu$1(data, session.data));
+  return session.data;
+}
+async function clearUserSession(event, config) {
+  const session = await _useSession(event, config);
+  await sessionHooks.callHookParallel("clear", session.data, event);
+  await session.clear();
+  return true;
+}
+let sessionConfig;
+function _useSession(event, config = {}) {
+  if (!sessionConfig) {
+    const runtimeConfig = useRuntimeConfig(isEvent(event) ? event : void 0);
+    const envSessionPassword = `${runtimeConfig.nitro?.envPrefix || "NUXT_"}SESSION_PASSWORD`;
+    sessionConfig = defu$1({ password: process.env[envSessionPassword] }, runtimeConfig.session);
+    if (!sessionConfig.password) {
+      console.error(`[nuxt-auth-utils] ${envSessionPassword} environment variable or runtimeConfig.session.password was not set.`);
+    }
+  }
+  const finalConfig = defu$1(config, sessionConfig);
+  return useSession(event, finalConfig);
+}
+
+const _tMVB93 = eventHandler(async (event) => {
+  await clearUserSession(event);
+  return { loggedOut: true };
+});
+
+const _fGuOIO = eventHandler(async (event) => {
+  const session = await getUserSession(event);
+  if (Object.keys(session).length > 0) {
+    await sessionHooks.callHookParallel("fetch", session, event);
+  }
+  const { secure, ...data } = session;
+  return data;
 });
 
 const VueResolver = (_, value) => {
@@ -2384,20 +3379,6 @@ function setSSRError(ssrContext, error) {
 	ssrContext.error = true;
 	ssrContext.payload = { error };
 	ssrContext.url = error.url;
-}
-
-function buildAssetsDir() {
-	
-	return useRuntimeConfig().app.buildAssetsDir;
-}
-function buildAssetsURL(...path) {
-	return joinRelativeURL(publicAssetsURL(), buildAssetsDir(), ...path);
-}
-function publicAssetsURL(...path) {
-	
-	const app = useRuntimeConfig().app;
-	const publicBase = app.cdnURL || app.baseURL;
-	return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
 }
 
 // @ts-expect-error private property consumed by vite-generated url helpers
@@ -2845,6 +3826,8 @@ const _lazy_k6CZb1 = () => Promise.resolve().then(function () { return _id__get$
 const _lazy_gfJ9Fv = () => Promise.resolve().then(function () { return index_get$1; });
 const _lazy_qpvjYV = () => Promise.resolve().then(function () { return index_post$1; });
 const _lazy_8Z4N7L = () => Promise.resolve().then(function () { return _id__get$1; });
+const _lazy_kKyCfm = () => Promise.resolve().then(function () { return facebook_get$1; });
+const _lazy_r1_r_I = () => Promise.resolve().then(function () { return google_get$1; });
 const _lazy_vuwYhi = () => Promise.resolve().then(function () { return renderer; });
 
 const handlers = [
@@ -2855,14 +3838,18 @@ const handlers = [
   { route: '/api/listings', handler: _lazy_gfJ9Fv, lazy: true, middleware: false, method: "get" },
   { route: '/api/listings', handler: _lazy_qpvjYV, lazy: true, middleware: false, method: "post" },
   { route: '/api/sellers/:id', handler: _lazy_8Z4N7L, lazy: true, middleware: false, method: "get" },
+  { route: '/auth/facebook', handler: _lazy_kKyCfm, lazy: true, middleware: false, method: "get" },
+  { route: '/auth/google', handler: _lazy_r1_r_I, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy_vuwYhi, lazy: true, middleware: false, method: undefined },
+  { route: '/api/_auth/session', handler: _tMVB93, lazy: false, middleware: false, method: "delete" },
+  { route: '/api/_auth/session', handler: _fGuOIO, lazy: false, middleware: false, method: "get" },
   { route: '/__nuxt_island/**', handler: handler$1, lazy: false, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_vuwYhi, lazy: true, middleware: false, method: undefined }
 ];
 
 function createNitroApp() {
   const config = useRuntimeConfig();
-  const hooks = createHooks();
+  const hooks = createHooks$1();
   const captureError = (error, context = {}) => {
     const promise = hooks.callHookParallel("error", error, context).catch((error_) => {
       console.error("Error while capturing another error", error_);
@@ -3001,84 +3988,8 @@ function useNitroApp() {
 }
 runNitroPlugins(nitroApp$1);
 
-function defineRenderHandler(render) {
-  const runtimeConfig = useRuntimeConfig();
-  return eventHandler(async (event) => {
-    const nitroApp = useNitroApp();
-    const ctx = { event, render, response: void 0 };
-    await nitroApp.hooks.callHook("render:before", ctx);
-    if (!ctx.response) {
-      if (event.path === `${runtimeConfig.app.baseURL}favicon.ico`) {
-        setResponseHeader(event, "Content-Type", "image/x-icon");
-        return send(
-          event,
-          "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-        );
-      }
-      ctx.response = await ctx.render(event);
-      if (!ctx.response) {
-        const _currentStatus = getResponseStatus(event);
-        setResponseStatus(event, _currentStatus === 200 ? 500 : _currentStatus);
-        return send(
-          event,
-          "No response returned from render handler: " + event.path
-        );
-      }
-    }
-    await nitroApp.hooks.callHook("render:response", ctx.response, ctx);
-    if (ctx.response.headers) {
-      setResponseHeaders(event, ctx.response.headers);
-    }
-    if (ctx.response.statusCode || ctx.response.statusMessage) {
-      setResponseStatus(
-        event,
-        ctx.response.statusCode,
-        ctx.response.statusMessage
-      );
-    }
-    return ctx.response.body;
-  });
-}
-
-const scheduledTasks = false;
-
-const tasks = {
-  
-};
-
-const __runningTasks__ = {};
-async function runTask(name, {
-  payload = {},
-  context = {}
-} = {}) {
-  if (__runningTasks__[name]) {
-    return __runningTasks__[name];
-  }
-  if (!(name in tasks)) {
-    throw createError({
-      message: `Task \`${name}\` is not available!`,
-      statusCode: 404
-    });
-  }
-  if (!tasks[name].resolve) {
-    throw createError({
-      message: `Task \`${name}\` is not implemented!`,
-      statusCode: 501
-    });
-  }
-  const handler = await tasks[name].resolve();
-  const taskEvent = { name, payload, context };
-  __runningTasks__[name] = handler.run(taskEvent);
-  try {
-    const res = await __runningTasks__[name];
-    return res;
-  } finally {
-    delete __runningTasks__[name];
-  }
-}
-
 if (!globalThis.crypto) {
-  globalThis.crypto = nodeCrypto.webcrypto;
+  globalThis.crypto = crypto$1.webcrypto;
 }
 const { NITRO_NO_UNIX_SOCKET, NITRO_DEV_WORKER_ID } = process.env;
 trapUnhandledNodeErrors();
@@ -3208,72 +4119,6 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: styles
 }, Symbol.toStringTag, { value: 'Module' }));
-
-const defaultData = {
-  credits: {
-    "demo-user": 5
-  },
-  sellers: [
-    {
-      id: "demo-user",
-      name: "Ama Koffi",
-      avatarInitials: "AK",
-      city: "Lom\xE9",
-      memberSince: "2023-03-01",
-      phone: "+228 90 00 00 00",
-      isVerified: true,
-      responseRate: 92
-    }
-  ],
-  categories: [
-    { slug: "vehicules", name: "V\xE9hicules" },
-    { slug: "immobilier", name: "Immobilier" },
-    { slug: "electronique", name: "\xC9lectronique" },
-    { slug: "mode-et-beaute", name: "Mode & Beaut\xE9" },
-    { slug: "emplois", name: "Emplois" }
-  ],
-  cities: ["Lom\xE9", "Kara", "Sokod\xE9", "Kpalim\xE9", "Atakpam\xE9", "Ts\xE9vi\xE9"],
-  listings: [
-    {
-      id: nanoid(8),
-      title: "Terrain 1/2 lot \xE0 Ago\xE8",
-      description: "Terrain viabilis\xE9 proche du goudron, titre foncier disponible.",
-      price: 12e6,
-      categorySlug: "immobilier",
-      city: "Lom\xE9",
-      images: [],
-      status: "published",
-      isTop: true,
-      isSold: false,
-      userId: "demo-user",
-      createdAt: (/* @__PURE__ */ new Date()).toISOString()
-    },
-    {
-      id: nanoid(8),
-      title: "Samsung Galaxy A15 128Go",
-      description: "T\xE9l\xE9phone neuf sous emballage, garantie 1 an.",
-      price: 95e3,
-      categorySlug: "electronique",
-      city: "Kara",
-      images: [],
-      status: "published",
-      isTop: false,
-      isSold: false,
-      userId: "demo-user",
-      createdAt: (/* @__PURE__ */ new Date()).toISOString()
-    }
-  ]
-};
-let dbInstance = null;
-async function getDb() {
-  if (!dbInstance) {
-    const dir = path.join(process.cwd(), ".data");
-    mkdirSync(dir, { recursive: true });
-    const file = path.join(dir, "db.json");
-    dbInstance = await JSONFilePreset(file, defaultData);
-  }
-  return dbInstance;
-}
 
 const _userId__get = defineEventHandler(async (event) => {
   var _a;
@@ -3422,6 +4267,72 @@ const _id__get = defineEventHandler(async (event) => {
 const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: _id__get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const facebook_get = defineOAuthFacebookEventHandler({
+  config: {
+    // champs demandés au profil Facebook
+    fields: ["id", "name", "email", "picture"]
+  },
+  async onSuccess(event, { user }) {
+    var _a, _b;
+    const seller = await upsertSellerFromOAuth({
+      provider: "facebook",
+      email: user.email,
+      name: user.name,
+      avatarUrl: (_b = (_a = user.picture) == null ? void 0 : _a.data) == null ? void 0 : _b.url
+    });
+    await setUserSession(event, {
+      user: {
+        id: seller.id,
+        name: seller.name,
+        email: seller.email,
+        avatarUrl: seller.avatarUrl
+      }
+    });
+    return sendRedirect(event, "/");
+  },
+  onError(event, error) {
+    console.error("Erreur OAuth Facebook:", error);
+    return sendRedirect(event, "/connexion?erreur=facebook");
+  }
+});
+
+const facebook_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: facebook_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const google_get = defineOAuthGoogleEventHandler({
+  config: {
+    scope: ["email", "profile"]
+  },
+  async onSuccess(event, { user }) {
+    const seller = await upsertSellerFromOAuth({
+      provider: "google",
+      email: user.email,
+      name: user.name,
+      avatarUrl: user.picture
+    });
+    await setUserSession(event, {
+      user: {
+        id: seller.id,
+        name: seller.name,
+        email: seller.email,
+        avatarUrl: seller.avatarUrl
+      }
+    });
+    return sendRedirect(event, "/");
+  },
+  onError(event, error) {
+    console.error("Erreur OAuth Google:", error);
+    return sendRedirect(event, "/connexion?erreur=google");
+  }
+});
+
+const google_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: google_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function renderPayloadResponse(ssrContext) {

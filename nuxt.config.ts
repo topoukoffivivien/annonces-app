@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  modules: ['@pinia/nuxt'],
+  modules: ['@pinia/nuxt', 'nuxt-auth-utils'],
 
   // Le code applicatif (pages, components, composables, app.vue) vit dans app/
   srcDir: 'app/',

@@ -187,6 +187,7 @@ declare global {
   const useState: typeof import('../../node_modules/nuxt/dist/app/composables/state').useState
   const useTemplateRef: typeof import('../../node_modules/vue/index').useTemplateRef
   const useTransitionState: typeof import('../../node_modules/vue/index').useTransitionState
+  const useUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/app/composables/session').useUserSession
   const watch: typeof import('../../node_modules/vue/index').watch
   const watchEffect: typeof import('../../node_modules/vue/index').watchEffect
   const watchPostEffect: typeof import('../../node_modules/vue/index').watchPostEffect
@@ -403,6 +404,7 @@ declare module 'vue' {
     readonly useState: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/state')['useState']>
     readonly useTemplateRef: UnwrapRef<typeof import('../../node_modules/vue/index')['useTemplateRef']>
     readonly useTransitionState: UnwrapRef<typeof import('../../node_modules/vue/index')['useTransitionState']>
+    readonly useUserSession: UnwrapRef<typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/app/composables/session')['useUserSession']>
     readonly watch: UnwrapRef<typeof import('../../node_modules/vue/index')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('../../node_modules/vue/index')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('../../node_modules/vue/index')['watchPostEffect']>

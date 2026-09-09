@@ -23,6 +23,7 @@ interface _GlobalComponents {
   LoginModal: typeof import("../../app/components/LoginModal.vue")['default']
   Pagination: typeof import("../../app/components/Pagination.vue")['default']
   TopListingsSlider: typeof import("../../app/components/TopListingsSlider.vue")['default']
+  AuthState: typeof import("../../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']
   NuxtWelcome: typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']
   NuxtLayout: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
   NuxtErrorBoundary: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']
@@ -55,6 +56,7 @@ interface _GlobalComponents {
   LazyLoginModal: LazyComponent<typeof import("../../app/components/LoginModal.vue")['default']>
   LazyPagination: LazyComponent<typeof import("../../app/components/Pagination.vue")['default']>
   LazyTopListingsSlider: LazyComponent<typeof import("../../app/components/TopListingsSlider.vue")['default']>
+  LazyAuthState: LazyComponent<typeof import("../../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']>
   LazyNuxtWelcome: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
   LazyNuxtLayout: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/nuxt-layout")['default']>
   LazyNuxtErrorBoundary: LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']>

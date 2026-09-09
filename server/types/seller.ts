@@ -7,4 +7,7 @@ export interface Seller {
   phone: string
   isVerified: boolean
   responseRate: number // pourcentage de réponse aux messages
+  email?: string
+  avatarUrl?: string
+  authProvider?: 'google' | 'facebook'
 }
