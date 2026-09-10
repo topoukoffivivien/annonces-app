@@ -12,6 +12,9 @@ const { data } = await useAsyncData<{ count: number; results: Listing[] }>(
 const favoriteListings = computed<Listing[]>(() =>
   (data.value?.results || []).filter((l: Listing) => favorites.isFavorite(l.id))
 )
+
+const isLoadingFavs = computed(() => !favorites.loaded)
+const showFavSkeleton = useMinLoading(isLoadingFavs, 400)
 </script>
 
 <template>
@@ -19,7 +22,7 @@ const favoriteListings = computed<Listing[]>(() =>
     <h1>Mes favoris</h1>
     <p class="subtitle">{{ favoriteListings.length }} annonce(s) enregistrée(s)</p>
 
-    <div v-if="!favorites.loaded" class="grid">
+    <div v-if="showFavSkeleton" class="grid">
       <ListingCardSkeleton v-for="n in 4" :key="n" />
     </div>
 

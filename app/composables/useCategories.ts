@@ -1,15 +1,16 @@
 export interface Category {
   slug: string
   name: string
+  icon: string
 }
 
 export function useCategories() {
   const categories: Category[] = [
-    { slug: 'vehicules', name: 'Véhicules' },
-    { slug: 'immobilier', name: 'Immobilier' },
-    { slug: 'electronique', name: 'Électronique' },
-    { slug: 'mode-et-beaute', name: 'Mode & Beauté' },
-    { slug: 'emplois', name: 'Emplois' }
+    { slug: 'vehicules', name: 'Véhicules', icon: 'car' },
+    { slug: 'immobilier', name: 'Immobilier', icon: 'home' },
+    { slug: 'electronique', name: 'Électronique', icon: 'smartphone' },
+    { slug: 'mode-et-beaute', name: 'Mode & Beauté', icon: 'shirt' },
+    { slug: 'emplois', name: 'Emplois', icon: 'briefcase' }
   ]
   const cities = ['Lomé', 'Kara', 'Sokodé', 'Kpalimé', 'Atakpamé', 'Tsévié']
 
@@ -17,5 +18,9 @@ export function useCategories() {
     return categories.find(c => c.slug === slug)?.name || slug
   }
 
-  return { categories, cities, categoryName }
+  function categoryIcon(slug: string) {
+    return categories.find(c => c.slug === slug)?.icon || 'question'
+  }
+
+  return { categories, cities, categoryName, categoryIcon }
 }

@@ -26,10 +26,11 @@ function formatMemberSince(iso: string) {
 const isFollowing = ref(false)
 const alertsEnabled = ref(false)
 const activeTab = ref<'active' | 'sold' | 'apropos'>('active')
+const showSkeleton = useMinLoading(pending, 400)
 </script>
 
 <template>
-  <main class="container" v-if="pending">
+  <main class="container" v-if="showSkeleton">
     <div class="profile-card">
       <div class="skeleton-avatar shimmer" />
       <div class="skeleton-line shimmer w-50" style="margin: 0 auto var(--space-xs);" />

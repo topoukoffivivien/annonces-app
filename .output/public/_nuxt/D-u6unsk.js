@@ -1,0 +1,1 @@
+import{r,I as u}from"./DJTFlNdP.js";function f(a,n=400){const e=r(a.value);let i=0,t=null;return u(a,l=>{if(l)t&&clearTimeout(t),e.value=!0,i=Date.now();else{const o=Date.now()-i,s=Math.max(0,n-o);t=setTimeout(()=>{e.value=!1},s)}},{immediate:!0}),e}export{f as u};

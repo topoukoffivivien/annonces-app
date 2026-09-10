@@ -8,7 +8,7 @@ watch(loggedIn, () => favorites.loadForCurrentUser(), { immediate: true })
 
 <template>
   <div>
-    <NuxtLoadingIndicator color="var(--color-primary)" :height="3" />
+    <NuxtLoadingIndicator color="var(--color-primary)" :height="3" :throttle="0" />
     <Header />
     <NuxtPage />
     <Footer />

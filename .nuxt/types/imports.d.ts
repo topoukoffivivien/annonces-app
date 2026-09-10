@@ -117,10 +117,10 @@ declare global {
   const useLink: typeof import('../../node_modules/vue-router/vue-router.node').useLink
   const useListings: typeof import('../../app/composables/useListings').useListings
   const useLoadingIndicator: typeof import('../../node_modules/nuxt/dist/app/composables/loading-indicator').useLoadingIndicator
+  const useMinLoading: typeof import('../../app/composables/useMinLoading').useMinLoading
   const useModel: typeof import('../../node_modules/vue/index').useModel
   const useNuxtApp: typeof import('../../node_modules/nuxt/dist/app/nuxt').useNuxtApp
   const useNuxtData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData').useNuxtData
-  const useNuxtDevTools: typeof import('../../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools').useNuxtDevTools
   const usePinia: typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables').usePinia
   const usePreviewMode: typeof import('../../node_modules/nuxt/dist/app/composables/preview').usePreviewMode
   const useRequestEvent: typeof import('../../node_modules/nuxt/dist/app/composables/ssr').useRequestEvent
@@ -334,10 +334,10 @@ declare module 'vue' {
     readonly useLink: UnwrapRef<typeof import('../../node_modules/vue-router/vue-router.node')['useLink']>
     readonly useListings: UnwrapRef<typeof import('../../app/composables/useListings')['useListings']>
     readonly useLoadingIndicator: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/loading-indicator')['useLoadingIndicator']>
+    readonly useMinLoading: UnwrapRef<typeof import('../../app/composables/useMinLoading')['useMinLoading']>
     readonly useModel: UnwrapRef<typeof import('../../node_modules/vue/index')['useModel']>
     readonly useNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['useNuxtApp']>
     readonly useNuxtData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useNuxtData']>
-    readonly useNuxtDevTools: UnwrapRef<typeof import('../../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools')['useNuxtDevTools']>
     readonly usePinia: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['usePinia']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
     readonly useRequestEvent: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useRequestEvent']>

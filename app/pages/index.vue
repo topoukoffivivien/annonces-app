@@ -29,6 +29,7 @@ const paginatedListings = computed(() => {
 })
 
 const isFiltering = ref(false)
+const showFilterSkeleton = useMinLoading(isFiltering, 400)
 
 async function onFilter(filters: Record<string, string>) {
   isFiltering.value = true
@@ -83,16 +84,16 @@ function changePage(p: number) {
 
     <div id="resultats">
       <div class="grid">
-        <template v-if="isFiltering">
+        <template v-if="showFilterSkeleton">
           <ListingCardSkeleton v-for="n in pageSize" :key="n" />
         </template>
         <template v-else>
           <ListingCard v-for="l in paginatedListings" :key="l.id" :listing="l" />
         </template>
       </div>
-      <p v-if="!isFiltering && !listings.length" class="empty">Aucune annonce ne correspond à ces critères.</p>
+      <p v-if="!showFilterSkeleton && !listings.length" class="empty">Aucune annonce ne correspond à ces critères.</p>
 
-      <Pagination v-if="!isFiltering" :current-page="currentPage" :total-pages="totalPages" @change="changePage" />
+      <Pagination v-if="!showFilterSkeleton" :current-page="currentPage" :total-pages="totalPages" @change="changePage" />
     </div>
   </main>
 </template>

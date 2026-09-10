@@ -1,6 +1,7 @@
 {
   "name": "annonces-app",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
@@ -22,6 +23,7 @@
     "@capacitor/android": "^6.1.2",
     "@capacitor/cli": "^6.1.2",
     "@capacitor/core": "^6.1.2",
-    "@capacitor/ios": "^6.1.2"
+    "@capacitor/ios": "^6.1.2",
+    "typescript": "^7.0.2"
   }
 }
