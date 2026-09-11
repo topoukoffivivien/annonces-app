@@ -38,3 +38,4 @@ export { useSellers, Seller } from '../app/composables/useSellers';
 export { useFavoritesStore } from '../app/stores/favorites';
 export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_modules/@pinia/nuxt/dist/runtime/composables';
 export { useUserSession } from '../node_modules/nuxt-auth-utils/dist/runtime/app/composables/session';
+export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';

@@ -85,7 +85,9 @@ async function submit() {
         </a>
       </div>
 
-      <p class="note">Comptes démo uniquement (Client ID/Secret non configurés) — les boutons Google/Facebook ne fonctionneront qu'une fois les identifiants OAuth renseignés dans .env.</p>
+      <p class="note">
+        En vous inscrivant, vous acceptez nos <NuxtLink to="/cgu">Conditions d'utilisation</NuxtLink> et notre <NuxtLink to="/politique-de-confidentialite">Politique de confidentialité</NuxtLink>.
+      </p>
     </div>
   </main>
 </template>
