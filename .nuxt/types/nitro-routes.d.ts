@@ -3,17 +3,23 @@ import type { Serialize, Simplify } from "nitropack/types";
 declare module "nitropack/types" {
   type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
   interface InternalApi {
+    '/api/alerts/:sellerId': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/alerts/[sellerId].get').default>>>>
+    }
+    '/api/alerts/toggle': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/alerts/toggle.post').default>>>>
+    }
     '/api/auth/login': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/login.post').default>>>>
     }
     '/api/auth/register': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/register.post').default>>>>
     }
-    '/api/credits/:userId': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/credits/[userId].get').default>>>>
-    }
     '/api/credits/boost': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/credits/boost.post').default>>>>
+    }
+    '/api/credits/me': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/credits/me.get').default>>>>
     }
     '/api/favorites/:userId': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/favorites/[userId].get').default>>>>
@@ -24,9 +30,18 @@ declare module "nitropack/types" {
     '/api/listings/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/listings/[id].get').default>>>>
     }
+    '/api/listings/:id/sold': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/listings/[id]/sold.post').default>>>>
+    }
     '/api/listings': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/listings/index.get').default>>>>
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/listings/index.post').default>>>>
+    }
+    '/api/notifications': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/notifications/index.get').default>>>>
+    }
+    '/api/notifications/read': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/notifications/read.post').default>>>>
     }
     '/api/sellers/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/sellers/[id].get').default>>>>

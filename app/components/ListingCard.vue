@@ -6,6 +6,7 @@ const props = defineProps<{
     price: number
     city: string
     isTop: boolean
+    isSold?: boolean
     images: string[]
   }
 }>()
@@ -22,12 +23,13 @@ function toggleFavorite() {
 </script>
 
 <template>
-  <div class="card">
+  <div class="card" :class="{ sold: listing.isSold }">
     <NuxtLink :to="`/annonce/${listing.id}`" class="card-link">
       <div class="thumb">
         <img v-if="listing.images[0]" :src="listing.images[0]" :alt="listing.title" />
         <span v-else class="placeholder">Photo</span>
-        <span v-if="listing.isTop" class="badge-top">TOP</span>
+        <span v-if="listing.isSold" class="badge-sold">VENDU</span>
+        <span v-else-if="listing.isTop" class="badge-top">TOP</span>
       </div>
       <div class="info">
         <p class="price">{{ formatPrice(listing.price) }}</p>
@@ -94,6 +96,20 @@ function toggleFavorite() {
   padding: 2px 8px;
   border-radius: 999px;
 }
+.badge-sold {
+  position: absolute;
+  top: var(--space-xs);
+  left: var(--space-xs);
+  background: rgb(31 36 32 / 0.75);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.card.sold .thumb img { opacity: 0.55; filter: grayscale(0.3); }
+.card.sold .price { color: var(--color-ink-soft); }
 .fav-btn {
   position: absolute;
   top: var(--space-xs);

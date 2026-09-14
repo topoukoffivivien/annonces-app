@@ -3,17 +3,17 @@ import { getDb } from '../../utils/db'
 const COUT_BOOST = 2 // crédits nécessaires pour booster une annonce 7 jours
 
 interface BoostBody {
-  userId: string
   listingId: string
 }
 
-// POST /api/credits/boost  body: { userId, listingId }
+// POST /api/credits/boost  body: { listingId } — l'utilisateur vient de la session, jamais du client
 export default defineEventHandler(async (event) => {
-  const body = await readBody<BoostBody>(event)
-  const { userId, listingId } = body
+  const session = await requireUserSession(event)
+  const userId = session.user.id
 
-  if (!userId || !listingId) {
-    throw createError({ statusCode: 400, statusMessage: 'userId et listingId requis' })
+  const body = await readBody<BoostBody>(event)
+  if (!body.listingId) {
+    throw createError({ statusCode: 400, statusMessage: 'listingId requis' })
   }
 
   const db = await getDb()
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const listing = db.data.listings.find(l => l.id === listingId && l.userId === userId)
+  const listing = db.data.listings.find(l => l.id === body.listingId && l.userId === userId)
   if (!listing) {
     throw createError({ statusCode: 404, statusMessage: 'Annonce introuvable pour cet utilisateur' })
   }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Listing } from '~/composables/useListings'
-import { useSellers } from '~/composables/useSellers'
 
 const route = useRoute()
 const { fetchListing, fetchListings } = useListings()
@@ -38,6 +37,50 @@ const { data: sellerData } = await useAsyncData(
   () => (listing.value ? fetchSeller(listing.value.userId) : Promise.resolve(null))
 )
 const seller = computed(() => sellerData.value?.seller)
+
+// Actions réservées au propriétaire (boost, marquer vendu)
+const { loggedIn, user } = useUserSession()
+const { open: openAuthModal } = useAuthModal()
+const { fetchMyBalance, boostListing } = useCredits()
+
+const isOwner = computed(() => loggedIn.value && user.value?.id === listing.value?.userId)
+const creditBalance = ref<number | null>(null)
+const boosting = ref(false)
+const boostMsg = ref('')
+const togglingSold = ref(false)
+
+if (isOwner.value) {
+  fetchMyBalance().then(res => { creditBalance.value = res.balance }).catch(() => {})
+}
+
+async function handleBoost() {
+  if (!listing.value) return
+  boosting.value = true
+  boostMsg.value = ''
+  try {
+    const res = await boostListing(listing.value.id)
+    listing.value.isTop = true
+    creditBalance.value = res.newBalance
+    boostMsg.value = 'Annonce boostée !'
+  } catch (e: any) {
+    boostMsg.value = e?.data?.statusMessage || 'Erreur lors du boost'
+  } finally {
+    boosting.value = false
+  }
+}
+
+async function toggleSold() {
+  if (!listing.value) return
+  togglingSold.value = true
+  try {
+    const res = await $fetch<{ listing: Listing }>(`/api/listings/${listing.value.id}/sold`, { method: 'POST' })
+    listing.value.isSold = res.listing.isSold
+  } catch {
+    // silencieux : bouton reste dans son état précédent
+  } finally {
+    togglingSold.value = false
+  }
+}
 
 // Slider automatique de la galerie
 const activeImage = ref(0)
@@ -102,10 +145,32 @@ function formatDate(iso: string) {
       </div>
 
       <aside class="side-col">
+        <div v-if="isOwner" class="owner-card">
+          <p class="owner-title">C'est votre annonce</p>
+          <div class="owner-actions">
+            <button class="btn-primary" :disabled="listing.isTop || boosting" @click="handleBoost">
+              {{ listing.isTop ? 'Déjà boostée' : boosting ? 'Un instant...' : 'Booster (2 crédits)' }}
+            </button>
+            <button class="sold-btn" :class="{ active: listing.isSold }" :disabled="togglingSold" @click="toggleSold">
+              {{ listing.isSold ? '✓ Marquée vendue' : 'Marquer comme vendue' }}
+            </button>
+          </div>
+          <p v-if="creditBalance !== null" class="owner-balance">Solde : {{ creditBalance }} crédit(s)</p>
+          <p v-if="boostMsg" class="owner-msg">{{ boostMsg }}</p>
+        </div>
+
         <div class="price-card">
           <p class="price">{{ formatPrice(listing.price) }}</p>
           <p class="city">{{ listing.city }}</p>
-          <button class="btn-primary contact">Contacter le vendeur</button>
+          <template v-if="seller?.phone">
+            <a :href="`tel:${seller.phone}`" class="btn-primary contact">Appeler le vendeur</a>
+            <a
+              :href="`https://wa.me/${seller.phone.replace(/\s+/g, '').replace('+', '')}`"
+              target="_blank" rel="noopener" class="whatsapp-btn"
+            >
+              WhatsApp
+            </a>
+          </template>
           <button class="fav" @click="favorites.toggle(listing.id)">
             <Icon :name="favorites.isFavorite(listing.id) ? 'heart-filled' : 'heart'" />
             {{ favorites.isFavorite(listing.id) ? 'Retiré des favoris' : 'Ajouter aux favoris' }}
@@ -183,6 +248,29 @@ function formatDate(iso: string) {
 .price-card .price { font-size: var(--step-2); font-weight: 700; color: var(--color-primary-ink); margin: 0; }
 .price-card .city { color: var(--color-ink-soft); font-size: var(--step--1); margin: 0 0 var(--space-sm); }
 .contact { width: 100%; margin-bottom: var(--space-xs); }
+.whatsapp-btn {
+  display: flex; align-items: center; justify-content: center; width: 100%;
+  padding: var(--space-xs) var(--space-md); border-radius: var(--radius-sm);
+  background: #25d366; color: #fff; font-weight: 500; text-decoration: none;
+  margin-bottom: var(--space-xs); transition: transform 0.15s var(--ease);
+}
+.whatsapp-btn:hover { transform: translateY(-1px); }
+
+.owner-card {
+  border: 1px solid var(--color-primary); background: rgb(11 110 79 / 0.06);
+  border-radius: var(--radius); padding: var(--space-md); margin-bottom: var(--space-sm);
+}
+.owner-title { font-weight: 600; font-size: var(--step--1); color: var(--color-primary-ink); margin: 0 0 var(--space-sm); }
+.owner-actions { display: flex; flex-direction: column; gap: var(--space-xs); }
+.sold-btn {
+  padding: var(--space-xs) var(--space-sm); border-radius: 13px; background: #f1f1f1;
+  border: 1px solid transparent; font-size: var(--step--1); font-weight: 500;
+  transition: background 0.15s var(--ease);
+}
+.sold-btn:hover { background: #e8e8e8; }
+.sold-btn.active { background: rgb(11 110 79 / 0.12); color: var(--color-primary-ink); }
+.owner-balance { font-size: var(--step--1); color: var(--color-ink-soft); margin: var(--space-xs) 0 0; }
+.owner-msg { font-size: var(--step--1); color: var(--color-primary-ink); margin: 4px 0 0; }
 .fav {
   width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--space-xs);
   background: none; border: 1px solid var(--color-border); border-radius: var(--radius-sm);

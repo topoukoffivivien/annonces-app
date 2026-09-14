@@ -97,12 +97,14 @@ declare global {
   const tryUseNuxtApp: typeof import('../../node_modules/nuxt/dist/app/nuxt').tryUseNuxtApp
   const unref: typeof import('../../node_modules/vue/index').unref
   const updateAppConfig: typeof import('../../node_modules/nuxt/dist/app/config').updateAppConfig
+  const useAlerts: typeof import('../../app/composables/useAlerts').useAlerts
   const useAppConfig: typeof import('../../node_modules/nuxt/dist/app/config').useAppConfig
   const useAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData').useAsyncData
   const useAttrs: typeof import('../../node_modules/vue/index').useAttrs
   const useAuthModal: typeof import('../../app/composables/useAuthModal').useAuthModal
   const useCategories: typeof import('../../app/composables/useCategories').useCategories
   const useCookie: typeof import('../../node_modules/nuxt/dist/app/composables/cookie').useCookie
+  const useCredits: typeof import('../../app/composables/useCredits').useCredits
   const useCssModule: typeof import('../../node_modules/vue/index').useCssModule
   const useCssVars: typeof import('../../node_modules/vue/index').useCssVars
   const useError: typeof import('../../node_modules/nuxt/dist/app/composables/error').useError
@@ -119,6 +121,7 @@ declare global {
   const useLoadingIndicator: typeof import('../../node_modules/nuxt/dist/app/composables/loading-indicator').useLoadingIndicator
   const useMinLoading: typeof import('../../app/composables/useMinLoading').useMinLoading
   const useModel: typeof import('../../node_modules/vue/index').useModel
+  const useNotifications: typeof import('../../app/composables/useNotifications').useNotifications
   const useNuxtApp: typeof import('../../node_modules/nuxt/dist/app/nuxt').useNuxtApp
   const useNuxtData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData').useNuxtData
   const useNuxtDevTools: typeof import('../../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools').useNuxtDevTools
@@ -211,6 +214,9 @@ declare global {
   // @ts-ignore
   export type { Listing } from '../../app/composables/useListings'
   import('../../app/composables/useListings')
+  // @ts-ignore
+  export type { AppNotification } from '../../app/composables/useNotifications'
+  import('../../app/composables/useNotifications')
   // @ts-ignore
   export type { Seller } from '../../app/composables/useSellers'
   import('../../app/composables/useSellers')
@@ -315,12 +321,14 @@ declare module 'vue' {
     readonly tryUseNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['tryUseNuxtApp']>
     readonly unref: UnwrapRef<typeof import('../../node_modules/vue/index')['unref']>
     readonly updateAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['updateAppConfig']>
+    readonly useAlerts: UnwrapRef<typeof import('../../app/composables/useAlerts')['useAlerts']>
     readonly useAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['useAppConfig']>
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('../../node_modules/vue/index')['useAttrs']>
     readonly useAuthModal: UnwrapRef<typeof import('../../app/composables/useAuthModal')['useAuthModal']>
     readonly useCategories: UnwrapRef<typeof import('../../app/composables/useCategories')['useCategories']>
     readonly useCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']>
+    readonly useCredits: UnwrapRef<typeof import('../../app/composables/useCredits')['useCredits']>
     readonly useCssModule: UnwrapRef<typeof import('../../node_modules/vue/index')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('../../node_modules/vue/index')['useCssVars']>
     readonly useError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['useError']>
@@ -337,6 +345,7 @@ declare module 'vue' {
     readonly useLoadingIndicator: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/loading-indicator')['useLoadingIndicator']>
     readonly useMinLoading: UnwrapRef<typeof import('../../app/composables/useMinLoading')['useMinLoading']>
     readonly useModel: UnwrapRef<typeof import('../../node_modules/vue/index')['useModel']>
+    readonly useNotifications: UnwrapRef<typeof import('../../app/composables/useNotifications')['useNotifications']>
     readonly useNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['useNuxtApp']>
     readonly useNuxtData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useNuxtData']>
     readonly useNuxtDevTools: UnwrapRef<typeof import('../../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools')['useNuxtDevTools']>

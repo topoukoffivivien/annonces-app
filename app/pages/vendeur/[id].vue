@@ -25,8 +25,38 @@ function formatMemberSince(iso: string) {
 
 const isFollowing = ref(false)
 const alertsEnabled = ref(false)
+const alertsLoading = ref(false)
 const activeTab = ref<'active' | 'sold' | 'apropos'>('active')
 const showSkeleton = useMinLoading(pending, 400)
+
+const { loggedIn } = useUserSession()
+const { open: openAuthModal } = useAuthModal()
+const { fetchSubscribed, toggleAlert } = useAlerts()
+
+watch(seller, async (s) => {
+  if (s && loggedIn.value) {
+    try {
+      const res = await fetchSubscribed(s.id)
+      alertsEnabled.value = res.subscribed
+    } catch { /* silencieux */ }
+  }
+}, { immediate: true })
+
+async function handleAlertsToggle() {
+  if (!seller.value) return
+  if (!loggedIn.value) {
+    openAuthModal()
+    return
+  }
+  alertsLoading.value = true
+  try {
+    const res = await toggleAlert(seller.value.id)
+    alertsEnabled.value = res.subscribed
+  } catch { /* silencieux */ }
+  finally {
+    alertsLoading.value = false
+  }
+}
 </script>
 
 <template>
@@ -64,7 +94,7 @@ const showSkeleton = useMinLoading(pending, 400)
         <button class="action-btn outline" :class="{ active: isFollowing }" @click="isFollowing = !isFollowing">
           {{ isFollowing ? '✓ Abonné' : "+ S'abonner" }}
         </button>
-        <button class="action-btn outline bell-btn" :class="{ active: alertsEnabled }" @click="alertsEnabled = !alertsEnabled">
+        <button class="action-btn outline bell-btn" :class="{ active: alertsEnabled }" :disabled="alertsLoading" @click="handleAlertsToggle">
           <Icon name="bell" />
           {{ alertsEnabled ? 'Alertes activées' : 'Alertes nouveautés' }}
         </button>

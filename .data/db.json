@@ -17,7 +17,7 @@
       "phone": "+228 90 00 00 00",
       "isVerified": true,
       "responseRate": 92,
-      "avatarUrl": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=4554026108212715&height=50&width=50&ext=1791761295&hash=AftV9x0uhRwRfMBKYSVB15sg"
+      "avatarUrl": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=4554026108212715&height=50&width=50&ext=1792013063&hash=Afu3l0jlH1TfD927ZClA6ngN"
     },
     {
       "id": "seller-2",
@@ -399,5 +399,7 @@
       "wU0ZwUrL",
       "x8rYtn9L"
     ]
-  }
+  },
+  "alerts": {},
+  "notifications": {}
 }

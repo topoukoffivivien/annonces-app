@@ -1,26 +1,61 @@
 <script setup lang="ts">
+import type { AppNotification } from '~/composables/useNotifications'
+
 const { categories } = useCategories()
 const favorites = useFavoritesStore()
 const { open: openAuthModal } = useAuthModal()
 const { loggedIn, user, clear } = useUserSession()
+const { fetchAll, markAllRead } = useNotifications()
 const route = useRoute()
 const open = ref(false)
 const userMenuOpen = ref(false)
 const userMenuRef = ref<HTMLElement | null>(null)
+const notifOpen = ref(false)
+const notifRef = ref<HTMLElement | null>(null)
+const notifications = ref<AppNotification[]>([])
+const unreadCount = ref(0)
 
 function isActiveCategory(slug: string) {
   return route.path === `/categorie/${slug}`
 }
 
+async function loadNotifications() {
+  if (!loggedIn.value) {
+    notifications.value = []
+    unreadCount.value = 0
+    return
+  }
+  try {
+    const res = await fetchAll()
+    notifications.value = res.items
+    unreadCount.value = res.unreadCount
+  } catch { /* silencieux */ }
+}
+
+async function toggleNotifPanel() {
+  notifOpen.value = !notifOpen.value
+  if (notifOpen.value && unreadCount.value > 0) {
+    await markAllRead()
+    unreadCount.value = 0
+    notifications.value = notifications.value.map(n => ({ ...n, read: true }))
+  }
+}
+
+watch(loggedIn, loadNotifications, { immediate: true })
+
 async function logout() {
   await clear()
   userMenuOpen.value = false
   open.value = false
+  await navigateTo('/')
 }
 
 function onClickOutside(e: MouseEvent) {
   if (userMenuRef.value && !userMenuRef.value.contains(e.target as Node)) {
     userMenuOpen.value = false
+  }
+  if (notifRef.value && !notifRef.value.contains(e.target as Node)) {
+    notifOpen.value = false
   }
 }
 
@@ -58,6 +93,27 @@ onUnmounted(() => {
       </nav>
 
       <div class="actions">
+        <div v-if="loggedIn" class="notif-menu" ref="notifRef">
+          <button class="btn-icon icon-link" aria-label="Notifications" @click="toggleNotifPanel">
+            <Icon name="bell" />
+            <span v-if="unreadCount" class="badge">{{ unreadCount }}</span>
+          </button>
+          <Transition name="dropdown">
+            <div v-if="notifOpen" class="dropdown notif-dropdown">
+              <p v-if="!notifications.length" class="notif-empty">Aucune notification pour l'instant.</p>
+              <NuxtLink
+                v-for="n in notifications"
+                :key="n.id"
+                :to="`/annonce/${n.listingId}`"
+                class="notif-item"
+                @click="notifOpen = false"
+              >
+                {{ n.message }}
+              </NuxtLink>
+            </div>
+          </Transition>
+        </div>
+
         <NuxtLink to="/favoris" class="btn-icon icon-link" aria-label="Favoris">
           <Icon name="heart" />
           <span v-if="favorites.count" class="badge">{{ favorites.count }}</span>
@@ -186,6 +242,14 @@ onUnmounted(() => {
 .actions { display: flex; align-items: center; gap: var(--space-sm); }
 
 .icon-link { position: relative; }
+.notif-menu { position: relative; }
+.notif-dropdown { min-width: 280px; max-height: 320px; overflow-y: auto; }
+.notif-empty { padding: var(--space-sm); font-size: var(--step--1); color: var(--color-ink-soft); text-align: center; }
+.notif-item {
+  display: block; padding: var(--space-xs) var(--space-sm); border-radius: 10px;
+  font-size: var(--step--1); color: var(--color-ink); transition: background 0.15s var(--ease);
+}
+.notif-item:hover { background: #f1f1f1; }
 .badge {
   position: absolute; top: -6px; right: -8px; background: var(--color-coral); color: #fff;
   font-size: 10px; font-weight: 700; border-radius: 999px; min-width: 16px; height: 16px;

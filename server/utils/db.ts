@@ -4,6 +4,7 @@ import path from 'path'
 import { mkdirSync } from 'fs'
 import type { Listing } from '../types/listing'
 import type { Seller } from '../types/seller'
+import type { AppNotification } from '../types/notification'
 
 interface DbSchema {
   listings: Listing[]
@@ -12,6 +13,8 @@ interface DbSchema {
   credits: Record<string, number>
   sellers: Seller[]
   favorites: Record<string, string[]>
+  alerts: Record<string, string[]>          // sellerId -> ids des abonnés
+  notifications: Record<string, AppNotification[]> // userId -> ses notifications
 }
 
 const categories = [
@@ -296,6 +299,8 @@ const defaultData: DbSchema = {
     'seller-3': 1
   },
   favorites: {},
+  alerts: {},
+  notifications: {},
   sellers,
   categories,
   cities,
@@ -326,6 +331,14 @@ export async function getDb() {
     }
     if (!dbInstance.data.credits) {
       dbInstance.data.credits = {}
+      migrated = true
+    }
+    if (!dbInstance.data.alerts) {
+      dbInstance.data.alerts = {}
+      migrated = true
+    }
+    if (!dbInstance.data.notifications) {
+      dbInstance.data.notifications = {}
       migrated = true
     }
     if (migrated) await dbInstance.write()

@@ -34,6 +34,26 @@ export default defineEventHandler(async (event) => {
   }
 
   db.data.listings.push(listing)
+
+  // Notifie les personnes abonnées aux alertes de ce vendeur
+  if (listing.status === 'published') {
+    const subscribers = db.data.alerts[listing.userId] || []
+    if (subscribers.length) {
+      const sellerName = db.data.sellers.find(s => s.id === listing.userId)?.name || 'Un vendeur'
+      for (const subscriberId of subscribers) {
+        const list = db.data.notifications[subscriberId] || []
+        list.push({
+          id: nanoid(8),
+          message: `${sellerName} a publié une nouvelle annonce : ${listing.title}`,
+          listingId: listing.id,
+          createdAt: new Date().toISOString(),
+          read: false
+        })
+        db.data.notifications[subscriberId] = list
+      }
+    }
+  }
+
   await db.write()
 
   return {

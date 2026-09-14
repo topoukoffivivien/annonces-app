@@ -3169,6 +3169,8 @@ const defaultData = {
     "seller-3": 1
   },
   favorites: {},
+  alerts: {},
+  notifications: {},
   sellers,
   categories,
   cities,
@@ -3192,6 +3194,14 @@ async function getDb() {
     }
     if (!dbInstance.data.credits) {
       dbInstance.data.credits = {};
+      migrated = true;
+    }
+    if (!dbInstance.data.alerts) {
+      dbInstance.data.alerts = {};
+      migrated = true;
+    }
+    if (!dbInstance.data.notifications) {
+      dbInstance.data.notifications = {};
       migrated = true;
     }
     if (migrated) await dbInstance.write();
@@ -3266,6 +3276,22 @@ async function clearUserSession(event, config) {
   await sessionHooks.callHookParallel("clear", session.data, event);
   await session.clear();
   return true;
+}
+async function requireUserSession(event, opts = {}) {
+  const userSession = await getUserSession(event);
+  if (!userSession.user) {
+    if (isEvent(event)) {
+      throw createError({
+        statusCode: opts.statusCode || 401,
+        message: opts.message || "Unauthorized"
+      });
+    } else {
+      throw new Response(opts.message || "Unauthorized", {
+        status: opts.statusCode || 401
+      });
+    }
+  }
+  return userSession;
 }
 let sessionConfig;
 function _useSession(event, config = {}) {
@@ -3852,15 +3878,20 @@ async function getIslandContext(event) {
 	};
 }
 
+const _lazy_nZN6lo = () => Promise.resolve().then(function () { return _sellerId__get$1; });
+const _lazy_hID8BJ = () => Promise.resolve().then(function () { return toggle_post$3; });
 const _lazy_eTwOuS = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_HQvkq4 = () => Promise.resolve().then(function () { return register_post$1; });
-const _lazy_b98le4 = () => Promise.resolve().then(function () { return _userId__get$3; });
 const _lazy_KSrc5l = () => Promise.resolve().then(function () { return boost_post$1; });
+const _lazy_l72VZz = () => Promise.resolve().then(function () { return me_get$1; });
 const _lazy_C8yzO1 = () => Promise.resolve().then(function () { return _userId__get$1; });
 const _lazy_yE9Fyp = () => Promise.resolve().then(function () { return toggle_post$1; });
 const _lazy_k6CZb1 = () => Promise.resolve().then(function () { return _id__get$3; });
-const _lazy_gfJ9Fv = () => Promise.resolve().then(function () { return index_get$1; });
+const _lazy_fZvfCq = () => Promise.resolve().then(function () { return sold_post$1; });
+const _lazy_gfJ9Fv = () => Promise.resolve().then(function () { return index_get$3; });
 const _lazy_qpvjYV = () => Promise.resolve().then(function () { return index_post$1; });
+const _lazy_Mvnbzu = () => Promise.resolve().then(function () { return index_get$1; });
+const _lazy_Q5gYyg = () => Promise.resolve().then(function () { return read_post$1; });
 const _lazy_8Z4N7L = () => Promise.resolve().then(function () { return _id__get$1; });
 const _lazy_kKyCfm = () => Promise.resolve().then(function () { return facebook_get$1; });
 const _lazy_r1_r_I = () => Promise.resolve().then(function () { return google_get$1; });
@@ -3868,15 +3899,20 @@ const _lazy_vuwYhi = () => Promise.resolve().then(function () { return renderer;
 
 const handlers = [
   { route: '', handler: _EjhI9W, lazy: false, middleware: true, method: undefined },
+  { route: '/api/alerts/:sellerId', handler: _lazy_nZN6lo, lazy: true, middleware: false, method: "get" },
+  { route: '/api/alerts/toggle', handler: _lazy_hID8BJ, lazy: true, middleware: false, method: "post" },
   { route: '/api/auth/login', handler: _lazy_eTwOuS, lazy: true, middleware: false, method: "post" },
   { route: '/api/auth/register', handler: _lazy_HQvkq4, lazy: true, middleware: false, method: "post" },
-  { route: '/api/credits/:userId', handler: _lazy_b98le4, lazy: true, middleware: false, method: "get" },
   { route: '/api/credits/boost', handler: _lazy_KSrc5l, lazy: true, middleware: false, method: "post" },
+  { route: '/api/credits/me', handler: _lazy_l72VZz, lazy: true, middleware: false, method: "get" },
   { route: '/api/favorites/:userId', handler: _lazy_C8yzO1, lazy: true, middleware: false, method: "get" },
   { route: '/api/favorites/toggle', handler: _lazy_yE9Fyp, lazy: true, middleware: false, method: "post" },
   { route: '/api/listings/:id', handler: _lazy_k6CZb1, lazy: true, middleware: false, method: "get" },
+  { route: '/api/listings/:id/sold', handler: _lazy_fZvfCq, lazy: true, middleware: false, method: "post" },
   { route: '/api/listings', handler: _lazy_gfJ9Fv, lazy: true, middleware: false, method: "get" },
   { route: '/api/listings', handler: _lazy_qpvjYV, lazy: true, middleware: false, method: "post" },
+  { route: '/api/notifications', handler: _lazy_Mvnbzu, lazy: true, middleware: false, method: "get" },
+  { route: '/api/notifications/read', handler: _lazy_Q5gYyg, lazy: true, middleware: false, method: "post" },
   { route: '/api/sellers/:id', handler: _lazy_8Z4N7L, lazy: true, middleware: false, method: "get" },
   { route: '/auth/facebook', handler: _lazy_kKyCfm, lazy: true, middleware: false, method: "get" },
   { route: '/auth/google', handler: _lazy_r1_r_I, lazy: true, middleware: false, method: "get" },
@@ -4160,6 +4196,41 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: styles
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const _sellerId__get = defineEventHandler(async (event) => {
+  const sellerId = getRouterParam(event, "sellerId");
+  const session = await getUserSession(event);
+  if (!session.user) return { subscribed: false };
+  const db = await getDb();
+  const subscribers = db.data.alerts[sellerId] || [];
+  return { subscribed: subscribers.includes(session.user.id) };
+});
+
+const _sellerId__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _sellerId__get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const toggle_post$2 = defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+  const body = await readBody(event);
+  if (!body.sellerId) {
+    throw createError({ statusCode: 400, statusMessage: "sellerId requis" });
+  }
+  const db = await getDb();
+  const current = db.data.alerts[body.sellerId] || [];
+  const i = current.indexOf(session.user.id);
+  if (i === -1) current.push(session.user.id);
+  else current.splice(i, 1);
+  db.data.alerts[body.sellerId] = current;
+  await db.write();
+  return { subscribed: current.includes(session.user.id) };
+});
+
+const toggle_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: toggle_post$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const login_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
   if (!body.email || !body.password) {
@@ -4239,26 +4310,14 @@ const register_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: register_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const _userId__get$2 = defineEventHandler(async (event) => {
-  var _a;
-  const userId = getRouterParam(event, "userId");
-  const db = await getDb();
-  const balance = (_a = db.data.credits[userId]) != null ? _a : 0;
-  return { userId, balance };
-});
-
-const _userId__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  default: _userId__get$2
-}, Symbol.toStringTag, { value: 'Module' }));
-
 const COUT_BOOST = 2;
 const boost_post = defineEventHandler(async (event) => {
   var _a;
+  const session = await requireUserSession(event);
+  const userId = session.user.id;
   const body = await readBody(event);
-  const { userId, listingId } = body;
-  if (!userId || !listingId) {
-    throw createError({ statusCode: 400, statusMessage: "userId et listingId requis" });
+  if (!body.listingId) {
+    throw createError({ statusCode: 400, statusMessage: "listingId requis" });
   }
   const db = await getDb();
   const solde = (_a = db.data.credits[userId]) != null ? _a : 0;
@@ -4268,7 +4327,7 @@ const boost_post = defineEventHandler(async (event) => {
       statusMessage: `Cr\xE9dits insuffisants (solde: ${solde}, co\xFBt: ${COUT_BOOST})`
     });
   }
-  const listing = db.data.listings.find((l) => l.id === listingId && l.userId === userId);
+  const listing = db.data.listings.find((l) => l.id === body.listingId && l.userId === userId);
   if (!listing) {
     throw createError({ statusCode: 404, statusMessage: "Annonce introuvable pour cet utilisateur" });
   }
@@ -4285,6 +4344,19 @@ const boost_post = defineEventHandler(async (event) => {
 const boost_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: boost_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const me_get = defineEventHandler(async (event) => {
+  var _a;
+  const session = await requireUserSession(event);
+  const db = await getDb();
+  const balance = (_a = db.data.credits[session.user.id]) != null ? _a : 0;
+  return { userId: session.user.id, balance };
+});
+
+const me_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: me_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const _userId__get = defineEventHandler(async (event) => {
@@ -4333,7 +4405,28 @@ const _id__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: _id__get$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const index_get = defineEventHandler(async (event) => {
+const sold_post = defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+  const id = getRouterParam(event, "id");
+  const db = await getDb();
+  const listing = db.data.listings.find((l) => l.id === id);
+  if (!listing) {
+    throw createError({ statusCode: 404, statusMessage: "Annonce introuvable" });
+  }
+  if (listing.userId !== session.user.id) {
+    throw createError({ statusCode: 403, statusMessage: "Cette annonce ne vous appartient pas" });
+  }
+  listing.isSold = !listing.isSold;
+  await db.write();
+  return { listing };
+});
+
+const sold_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: sold_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const index_get$2 = defineEventHandler(async (event) => {
   const query = getQuery$1(event);
   const db = await getDb();
   let results = db.data.listings.filter((l) => l.status === "published");
@@ -4362,13 +4455,14 @@ const index_get = defineEventHandler(async (event) => {
   return { count: results.length, results };
 });
 
-const index_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get
+  default: index_get$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const MOTS_INTERDITS = ["arnaque", "contrefa\xE7on", "faux"];
 const index_post = defineEventHandler(async (event) => {
+  var _a;
   const body = await readBody(event);
   if (!body.title || !body.price || !body.categorySlug || !body.city) {
     throw createError({ statusCode: 400, statusMessage: "Champs obligatoires manquants" });
@@ -4391,6 +4485,23 @@ const index_post = defineEventHandler(async (event) => {
     createdAt: (/* @__PURE__ */ new Date()).toISOString()
   };
   db.data.listings.push(listing);
+  if (listing.status === "published") {
+    const subscribers = db.data.alerts[listing.userId] || [];
+    if (subscribers.length) {
+      const sellerName = ((_a = db.data.sellers.find((s) => s.id === listing.userId)) == null ? void 0 : _a.name) || "Un vendeur";
+      for (const subscriberId of subscribers) {
+        const list = db.data.notifications[subscriberId] || [];
+        list.push({
+          id: nanoid(8),
+          message: `${sellerName} a publi\xE9 une nouvelle annonce : ${listing.title}`,
+          listingId: listing.id,
+          createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+          read: false
+        });
+        db.data.notifications[subscriberId] = list;
+      }
+    }
+  }
   await db.write();
   return {
     listing,
@@ -4401,6 +4512,34 @@ const index_post = defineEventHandler(async (event) => {
 const index_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: index_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const index_get = defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+  const db = await getDb();
+  const items = (db.data.notifications[session.user.id] || []).slice().sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return { items, unreadCount: items.filter((n) => !n.read).length };
+});
+
+const index_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const read_post = defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+  const db = await getDb();
+  const items = db.data.notifications[session.user.id] || [];
+  items.forEach((n) => {
+    n.read = true;
+  });
+  await db.write();
+  return { success: true };
+});
+
+const read_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: read_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const _id__get = defineEventHandler(async (event) => {
