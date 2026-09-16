@@ -148,6 +148,9 @@ function formatDate(iso: string) {
         <div v-if="isOwner" class="owner-card">
           <p class="owner-title">C'est votre annonce</p>
           <div class="owner-actions">
+            <NuxtLink :to="`/annonce/${listing.id}/modifier`" class="edit-btn">
+              <Icon name="tag" /> Modifier l'annonce
+            </NuxtLink>
             <button class="btn-primary" :disabled="listing.isTop || boosting" @click="handleBoost">
               {{ listing.isTop ? 'Déjà boostée' : boosting ? 'Un instant...' : 'Booster (2 crédits)' }}
             </button>
@@ -262,6 +265,14 @@ function formatDate(iso: string) {
 }
 .owner-title { font-weight: 600; font-size: var(--step--1); color: var(--color-primary-ink); margin: 0 0 var(--space-sm); }
 .owner-actions { display: flex; flex-direction: column; gap: var(--space-xs); }
+.edit-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: var(--space-xs) var(--space-sm); border-radius: 13px; background: #f1f1f1;
+  color: var(--color-ink); font-size: var(--step--1); font-weight: 500; text-decoration: none;
+  transition: background 0.15s var(--ease);
+}
+.edit-btn:hover { background: #e8e8e8; }
+.edit-btn svg { width: 14px; height: 14px; }
 .sold-btn {
   padding: var(--space-xs) var(--space-sm); border-radius: 13px; background: #f1f1f1;
   border: 1px solid transparent; font-size: var(--step--1); font-weight: 500;

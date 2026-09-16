@@ -97,7 +97,9 @@ declare global {
   const tryUseNuxtApp: typeof import('../../node_modules/nuxt/dist/app/nuxt').tryUseNuxtApp
   const unref: typeof import('../../node_modules/vue/index').unref
   const updateAppConfig: typeof import('../../node_modules/nuxt/dist/app/config').updateAppConfig
+  const useAccount: typeof import('../../app/composables/useAccount').useAccount
   const useAlerts: typeof import('../../app/composables/useAlerts').useAlerts
+  const useApi: typeof import('../../app/composables/useApi').useApi
   const useAppConfig: typeof import('../../node_modules/nuxt/dist/app/config').useAppConfig
   const useAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData').useAsyncData
   const useAttrs: typeof import('../../node_modules/vue/index').useAttrs
@@ -108,6 +110,7 @@ declare global {
   const useCssModule: typeof import('../../node_modules/vue/index').useCssModule
   const useCssVars: typeof import('../../node_modules/vue/index').useCssVars
   const useError: typeof import('../../node_modules/nuxt/dist/app/composables/error').useError
+  const useFavorites: typeof import('../../app/composables/useFavorites').useFavorites
   const useFavoritesStore: typeof import('../../app/stores/favorites').useFavoritesStore
   const useFetch: typeof import('../../node_modules/nuxt/dist/app/composables/fetch').useFetch
   const useHead: typeof import('../../node_modules/nuxt/dist/app/composables/head').useHead
@@ -208,6 +211,9 @@ declare global {
   // @ts-ignore
   export type { Component, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from '../../node_modules/vue/index'
   import('../../node_modules/vue/index')
+  // @ts-ignore
+  export type { UpdateSellerPayload } from '../../app/composables/useAccount'
+  import('../../app/composables/useAccount')
   // @ts-ignore
   export type { Category } from '../../app/composables/useCategories'
   import('../../app/composables/useCategories')
@@ -321,7 +327,9 @@ declare module 'vue' {
     readonly tryUseNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['tryUseNuxtApp']>
     readonly unref: UnwrapRef<typeof import('../../node_modules/vue/index')['unref']>
     readonly updateAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['updateAppConfig']>
+    readonly useAccount: UnwrapRef<typeof import('../../app/composables/useAccount')['useAccount']>
     readonly useAlerts: UnwrapRef<typeof import('../../app/composables/useAlerts')['useAlerts']>
+    readonly useApi: UnwrapRef<typeof import('../../app/composables/useApi')['useApi']>
     readonly useAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['useAppConfig']>
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('../../node_modules/vue/index')['useAttrs']>
@@ -332,6 +340,7 @@ declare module 'vue' {
     readonly useCssModule: UnwrapRef<typeof import('../../node_modules/vue/index')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('../../node_modules/vue/index')['useCssVars']>
     readonly useError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['useError']>
+    readonly useFavorites: UnwrapRef<typeof import('../../app/composables/useFavorites')['useFavorites']>
     readonly useFavoritesStore: UnwrapRef<typeof import('../../app/stores/favorites')['useFavoritesStore']>
     readonly useFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['useFetch']>
     readonly useHead: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['useHead']>

@@ -15,6 +15,7 @@ interface DbSchema {
   favorites: Record<string, string[]>
   alerts: Record<string, string[]>          // sellerId -> ids des abonnés
   notifications: Record<string, AppNotification[]> // userId -> ses notifications
+  passwordResets: Record<string, { userId: string; expiresAt: string }> // token -> compte
 }
 
 const categories = [
@@ -301,6 +302,7 @@ const defaultData: DbSchema = {
   favorites: {},
   alerts: {},
   notifications: {},
+  passwordResets: {},
   sellers,
   categories,
   cities,
@@ -339,6 +341,10 @@ export async function getDb() {
     }
     if (!dbInstance.data.notifications) {
       dbInstance.data.notifications = {}
+      migrated = true
+    }
+    if (!dbInstance.data.passwordResets) {
+      dbInstance.data.passwordResets = {}
       migrated = true
     }
     if (migrated) await dbInstance.write()

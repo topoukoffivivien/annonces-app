@@ -67,6 +67,9 @@ async function submit() {
           <Icon name="lock" />
           <input v-model="password" type="password" placeholder="Mot de passe" required minlength="6" />
         </label>
+        <NuxtLink v-if="mode === 'login'" to="/mot-de-passe-oublie" class="forgot-link">
+          Mot de passe oublié ?
+        </NuxtLink>
         <button type="submit" class="btn-primary submit" :disabled="submitting">
           {{ submitting ? 'Un instant...' : (mode === 'login' ? 'Se connecter' : 'Créer mon compte') }}
         </button>
@@ -85,9 +88,7 @@ async function submit() {
         </a>
       </div>
 
-      <p class="note">
-        En vous inscrivant, vous acceptez nos <NuxtLink to="/cgu">Conditions d'utilisation</NuxtLink> et notre <NuxtLink to="/politique-de-confidentialite">Politique de confidentialité</NuxtLink>.
-      </p>
+      <p class="note">Comptes démo uniquement (Client ID/Secret non configurés) — les boutons Google/Facebook ne fonctionneront qu'une fois les identifiants OAuth renseignés dans .env.</p>
     </div>
   </main>
 </template>
@@ -131,6 +132,8 @@ form { display: flex; flex-direction: column; gap: var(--space-sm); }
 .field input:focus { outline: none; box-shadow: none; }
 
 .submit { margin-top: var(--space-xs); width: 100%; }
+.forgot-link { display: block; text-align: right; font-size: var(--step--1); color: var(--color-ink-soft); margin-top: -4px; }
+.forgot-link:hover { color: var(--color-primary-ink); }
 
 .divider { display: flex; align-items: center; gap: var(--space-sm); margin: var(--space-md) 0; }
 .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }

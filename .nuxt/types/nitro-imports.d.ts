@@ -154,6 +154,7 @@ declare global {
   const send: typeof import('../../node_modules/h3').send
   const sendError: typeof import('../../node_modules/h3').sendError
   const sendIterable: typeof import('../../node_modules/h3').sendIterable
+  const sendMail: typeof import('../../server/utils/mailer').sendMail
   const sendNoContent: typeof import('../../node_modules/h3').sendNoContent
   const sendProxy: typeof import('../../node_modules/h3').sendProxy
   const sendRedirect: typeof import('../../node_modules/h3').sendRedirect
@@ -407,4 +408,5 @@ export { passwordNeedsReHash } from 'C:/Projet/annonces-app/node_modules/nuxt-au
 export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clearUserSession, requireUserSession } from 'C:/Projet/annonces-app/node_modules/nuxt-auth-utils/dist/runtime/server/utils/session';
 export { upsertSellerFromOAuth } from 'C:/Projet/annonces-app/server/utils/auth';
 export { getDb } from 'C:/Projet/annonces-app/server/utils/db';
+export { sendMail } from 'C:/Projet/annonces-app/server/utils/mailer';
 export { hashPassword, verifyPassword } from 'C:/Projet/annonces-app/server/utils/password';

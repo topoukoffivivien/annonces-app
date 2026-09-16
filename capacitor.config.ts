@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'Annonces TG',
   webDir: '.output/public',
   server: {
-    androidScheme: 'https'
+    url: 'https://ton-domaine-de-production.com',
+    cleartext: false
   }
 };
 

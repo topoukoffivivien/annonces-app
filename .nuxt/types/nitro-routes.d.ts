@@ -9,11 +9,23 @@ declare module "nitropack/types" {
     '/api/alerts/toggle': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/alerts/toggle.post').default>>>>
     }
+    '/api/auth/forgot-password': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/forgot-password.post').default>>>>
+    }
     '/api/auth/login': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/login.post').default>>>>
     }
     '/api/auth/register': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/register.post').default>>>>
+    }
+    '/api/auth/resend-verification': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/resend-verification.post').default>>>>
+    }
+    '/api/auth/reset-password': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/reset-password.post').default>>>>
+    }
+    '/api/auth/verify-email': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/verify-email.post').default>>>>
     }
     '/api/credits/boost': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/credits/boost.post').default>>>>
@@ -28,7 +40,9 @@ declare module "nitropack/types" {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/favorites/toggle.post').default>>>>
     }
     '/api/listings/:id': {
+      'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/listings/[id].delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/listings/[id].get').default>>>>
+      'patch': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/listings/[id].patch').default>>>>
     }
     '/api/listings/:id/sold': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/listings/[id]/sold.post').default>>>>
@@ -45,6 +59,12 @@ declare module "nitropack/types" {
     }
     '/api/sellers/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/sellers/[id].get').default>>>>
+    }
+    '/api/sellers/me': {
+      'patch': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/sellers/me.patch').default>>>>
+    }
+    '/api/sellers/me/listings': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/sellers/me/listings.get').default>>>>
     }
     '/auth/facebook': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/routes/auth/facebook.get').default>>>>

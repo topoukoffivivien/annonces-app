@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid'
 import { getDb } from '../../utils/db'
 import { hashPassword } from '../../utils/password'
+import { sendMail } from '../../utils/mailer'
 
 interface RegisterBody {
   name: string
@@ -31,6 +32,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const passwordHash = await hashPassword(body.password)
+  const emailVerificationToken = nanoid(32)
 
   if (seller) {
     // Compte existant créé via OAuth : on lui ajoute la possibilité de se connecter par mot de passe
@@ -46,6 +48,8 @@ export default defineEventHandler(async (event) => {
       isVerified: false,
       responseRate: 0,
       email,
+      emailVerified: false,
+      emailVerificationToken,
       authProvider: 'password',
       passwordHash
     }
@@ -55,9 +59,14 @@ export default defineEventHandler(async (event) => {
 
   await db.write()
 
+  const verifyLink = `/verifier-email?token=${emailVerificationToken}`
+  await sendMail(email, 'Confirmez votre email', `Cliquez ici pour confirmer votre compte : ${verifyLink}`)
+
   await setUserSession(event, {
     user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl }
   })
 
-  return { success: true }
+  // ⚠️ devVerifyLink n'est renvoyé que parce qu'aucun vrai email n'est envoyé ici.
+  // À supprimer dès qu'un vrai fournisseur d'email est branché dans mailer.ts.
+  return { success: true, devVerifyLink: verifyLink }
 })

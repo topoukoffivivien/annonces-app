@@ -1,10 +1,19 @@
 <script setup lang="ts">
-const { createListing } = useListings()
+import type { Listing } from '~/composables/useListings'
+
+const route = useRoute()
+const { fetchListing } = useListings()
+const { updateListing } = useAccount()
 const { categories, cities } = useCategories()
 const { loggedIn, user } = useUserSession()
-const { open: openAuthModal } = useAuthModal()
 
 const MAX_IMAGES = 6
+
+const { data: listing } = await useAsyncData<Listing>(`edit-${route.params.id}`, () =>
+  fetchListing(route.params.id as string)
+)
+
+const isOwner = computed(() => loggedIn.value && user.value?.id === listing.value?.userId)
 
 const form = reactive({
   title: '',
@@ -14,6 +23,17 @@ const form = reactive({
   city: 'Lomé',
   images: [] as string[]
 })
+
+watch(listing, (l) => {
+  if (l) {
+    form.title = l.title
+    form.description = l.description
+    form.price = l.price
+    form.categorySlug = l.categorySlug
+    form.city = l.city
+    form.images = [...l.images]
+  }
+}, { immediate: true })
 
 const message = ref('')
 const success = ref(false)
@@ -31,34 +51,23 @@ function onFilesSelected(e: Event) {
     }
     reader.readAsDataURL(file)
   })
-
   input.value = ''
 }
-
 function removeImage(i: number) {
   form.images.splice(i, 1)
 }
 
 async function submit() {
-  if (!loggedIn.value) {
-    openAuthModal()
-    return
-  }
+  if (!listing.value) return
   submitting.value = true
   message.value = ''
   try {
-    const res = await createListing({ ...form, userId: user.value?.id })
-    message.value = res.message
-    success.value = res.listing.status === 'published'
-    if (success.value) {
-      form.title = ''
-      form.description = ''
-      form.price = 0
-      form.images = []
-    }
+    await updateListing(listing.value.id, { ...form })
+    success.value = true
+    message.value = 'Annonce mise à jour.'
   } catch (e: any) {
-    message.value = e?.data?.statusMessage || 'Erreur lors de la publication'
     success.value = false
+    message.value = e?.data?.statusMessage || 'Erreur lors de la mise à jour'
   } finally {
     submitting.value = false
   }
@@ -67,28 +76,21 @@ async function submit() {
 
 <template>
   <main class="page">
-    <div class="card">
+    <div v-if="!listing" class="card"><p>Annonce introuvable.</p></div>
+
+    <div v-else-if="!isOwner" class="card">
+      <h1>Accès refusé</h1>
+      <p class="subtitle">Cette annonce ne vous appartient pas.</p>
+    </div>
+
+    <div v-else class="card">
       <div class="badge"><Icon name="tag" /></div>
-      <h1>Publier une annonce</h1>
-      <p class="subtitle">Décrivez votre article, ajoutez des photos, et publiez en quelques secondes.</p>
-      <p v-if="!loggedIn" class="login-notice">
-        <Icon name="lock" /> Vous devez être connecté pour publier —
-        <button type="button" class="login-link" @click="openAuthModal">se connecter</button>
-      </p>
+      <h1>Modifier l'annonce</h1>
 
       <form @submit.prevent="submit">
-        <label class="field">
-          <input v-model="form.title" type="text" placeholder="Titre de l'annonce" required />
-        </label>
-
-        <label class="field textarea-field">
-          <textarea v-model="form.description" rows="4" placeholder="Décrivez l'état, les caractéristiques, les conditions de remise en main propre..." />
-        </label>
-
-        <label class="field">
-          <span class="prefix">CFA</span>
-          <input v-model.number="form.price" type="number" min="0" placeholder="Prix" required />
-        </label>
+        <label class="field"><input v-model="form.title" type="text" placeholder="Titre de l'annonce" required /></label>
+        <label class="field textarea-field"><textarea v-model="form.description" rows="4" placeholder="Description" /></label>
+        <label class="field"><span class="prefix">CFA</span><input v-model.number="form.price" type="number" min="0" required /></label>
 
         <div class="row">
           <label class="field">
@@ -108,22 +110,19 @@ async function submit() {
         <div class="upload-zone">
           <label class="upload-trigger">
             <Icon name="image" />
-            <span>Ajouter des photos ({{ form.images.length }}/{{ MAX_IMAGES }})</span>
+            <span>Photos ({{ form.images.length }}/{{ MAX_IMAGES }})</span>
             <input type="file" accept="image/*" multiple :disabled="form.images.length >= MAX_IMAGES" @change="onFilesSelected" hidden />
           </label>
-
           <div v-if="form.images.length" class="thumbs">
             <div v-for="(img, i) in form.images" :key="i" class="thumb">
-              <img :src="img" alt="Photo de l'annonce" />
-              <button type="button" class="btn-icon remove" @click="removeImage(i)" aria-label="Retirer la photo">
-                <Icon name="x" />
-              </button>
+              <img :src="img" alt="" />
+              <button type="button" class="btn-icon remove" @click="removeImage(i)" aria-label="Retirer"><Icon name="x" /></button>
             </div>
           </div>
         </div>
 
         <button type="submit" class="btn-primary submit" :disabled="submitting">
-          {{ submitting ? 'Publication...' : 'Publier l\'annonce' }}
+          {{ submitting ? 'Enregistrement...' : 'Enregistrer les modifications' }}
         </button>
       </form>
 
@@ -136,63 +135,33 @@ async function submit() {
 .page { display: flex; justify-content: center; padding: var(--space-xl) var(--space-md); }
 .card {
   width: 100%; max-width: 480px; background: var(--color-surface);
-  border: 1px solid var(--color-border); border-radius: calc(var(--radius) + 4px);
-  padding: var(--space-lg);
+  border: 1px solid var(--color-border); border-radius: calc(var(--radius) + 4px); padding: var(--space-lg);
 }
 .badge {
   width: 44px; height: 44px; border-radius: 12px;
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-ink));
-  color: #fff; display: flex; align-items: center; justify-content: center;
-  margin-bottom: var(--space-sm);
+  color: #fff; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-sm);
 }
 .badge svg { width: 20px; height: 20px; }
-h1 { font-size: var(--step-2); margin-bottom: 4px; }
-.subtitle { color: var(--color-ink-soft); font-size: var(--step--1); margin-bottom: var(--space-md); }
-.login-notice {
-  display: flex; align-items: center; gap: 6px; font-size: var(--step--1);
-  background: rgb(232 163 61 / 0.12); color: var(--color-accent-ink);
-  padding: var(--space-xs) var(--space-sm); border-radius: 10px; margin-bottom: var(--space-md);
-}
-.login-notice svg { width: 14px; height: 14px; }
-.login-link { color: var(--color-accent-ink); text-decoration: underline; font-weight: 600; background: none; border: none; padding: 0; }
-
+.subtitle { color: var(--color-ink-soft); }
 form { display: flex; flex-direction: column; gap: var(--space-sm); }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
-
 .field {
   display: flex; align-items: center; gap: var(--space-xs);
   border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0 var(--space-sm);
-  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
 }
-.field:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgb(11 110 79 / 0.12); }
 .field svg { width: 16px; height: 16px; color: var(--color-ink-soft); flex-shrink: 0; }
 .field input, .field select, .field textarea { flex: 1; border: none; padding: var(--space-sm) 0; background: none; }
-.field input:focus, .field select:focus, .field textarea:focus { outline: none; box-shadow: none; }
 .field .prefix { font-size: var(--step--1); color: var(--color-ink-soft); font-weight: 600; }
 .textarea-field { align-items: flex-start; padding-block: var(--space-xs); }
 .textarea-field textarea { resize: vertical; font-family: inherit; }
-
 .upload-zone { border: 1px dashed var(--color-border-strong); border-radius: var(--radius); padding: var(--space-sm); }
-.upload-trigger {
-  display: flex; align-items: center; justify-content: center; gap: var(--space-xs);
-  padding: var(--space-sm); cursor: pointer; color: var(--color-ink-soft); font-size: var(--step--1);
-  transition: color 0.15s var(--ease);
-}
-.upload-trigger:hover { color: var(--color-primary-ink); }
-.upload-trigger svg { width: 18px; height: 18px; }
-
+.upload-trigger { display: flex; align-items: center; justify-content: center; gap: var(--space-xs); padding: var(--space-sm); cursor: pointer; color: var(--color-ink-soft); font-size: var(--step--1); }
 .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: var(--space-xs); margin-top: var(--space-sm); }
 .thumb { position: relative; aspect-ratio: 1; border-radius: var(--radius-sm); overflow: hidden; }
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
-.thumb .remove {
-  position: absolute; top: 4px; right: 4px; width: 22px; height: 22px;
-  background: rgb(0 0 0 / 0.55); border-color: transparent; color: #fff;
-}
-.thumb .remove svg { width: 12px; height: 12px; }
-
+.thumb .remove { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; background: rgb(0 0 0 / 0.55); border-color: transparent; color: #fff; }
 .submit { margin-top: var(--space-xs); }
-.submit:disabled { opacity: 0.6; cursor: default; transform: none; }
-
 .alert { margin-top: var(--space-md); padding: var(--space-sm); border-radius: var(--radius-sm); font-size: var(--step--1); }
 .alert.ok { background: rgb(11 110 79 / 0.1); color: var(--color-primary-ink); }
 .alert.err { background: rgb(179 64 42 / 0.1); color: var(--color-danger); }

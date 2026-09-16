@@ -130,7 +130,10 @@ onUnmounted(() => {
           <Transition name="dropdown">
             <div v-if="userMenuOpen" class="dropdown">
               <NuxtLink :to="`/vendeur/${user?.id}`" class="dropdown-item" @click="userMenuOpen = false">
-                <Icon name="tag" /> Mon profil
+                <Icon name="tag" /> Mon profil public
+              </NuxtLink>
+              <NuxtLink to="/compte" class="dropdown-item" @click="userMenuOpen = false">
+                <Icon name="lock" /> Mon compte
               </NuxtLink>
               <NuxtLink to="/favoris" class="dropdown-item" @click="userMenuOpen = false">
                 <Icon name="heart" /> Mes favoris
@@ -172,6 +175,8 @@ onUnmounted(() => {
               <div>
                 <p class="mobile-account-name">{{ user?.name }}</p>
                 <NuxtLink :to="`/vendeur/${user?.id}`" class="mobile-account-link" @click="open = false">Voir mon profil</NuxtLink>
+                ·
+                <NuxtLink to="/compte" class="mobile-account-link" @click="open = false">Gérer mon compte</NuxtLink>
               </div>
             </div>
             <button v-else class="mobile-cta" @click="openAuthModal(); open = false">

@@ -3171,6 +3171,7 @@ const defaultData = {
   favorites: {},
   alerts: {},
   notifications: {},
+  passwordResets: {},
   sellers,
   categories,
   cities,
@@ -3202,6 +3203,10 @@ async function getDb() {
     }
     if (!dbInstance.data.notifications) {
       dbInstance.data.notifications = {};
+      migrated = true;
+    }
+    if (!dbInstance.data.passwordResets) {
+      dbInstance.data.passwordResets = {};
       migrated = true;
     }
     if (migrated) await dbInstance.write();
@@ -3240,6 +3245,16 @@ async function upsertSellerFromOAuth(input) {
     await db.write();
   }
   return seller;
+}
+
+async function sendMail(to, subject, bodyText) {
+  console.log(`
+\u{1F4E7} [EMAIL SIMUL\xC9]
+\xC0: ${to}
+Sujet: ${subject}
+${bodyText}
+`);
+  return { simulated: true };
 }
 
 const scrypt = promisify(scrypt$1);
@@ -3880,19 +3895,27 @@ async function getIslandContext(event) {
 
 const _lazy_nZN6lo = () => Promise.resolve().then(function () { return _sellerId__get$1; });
 const _lazy_hID8BJ = () => Promise.resolve().then(function () { return toggle_post$3; });
+const _lazy_8uS3dM = () => Promise.resolve().then(function () { return forgotPassword_post$1; });
 const _lazy_eTwOuS = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_HQvkq4 = () => Promise.resolve().then(function () { return register_post$1; });
+const _lazy_4SJnmq = () => Promise.resolve().then(function () { return resendVerification_post$1; });
+const _lazy_TJM8J1 = () => Promise.resolve().then(function () { return resetPassword_post$1; });
+const _lazy_qakRho = () => Promise.resolve().then(function () { return verifyEmail_post$1; });
 const _lazy_KSrc5l = () => Promise.resolve().then(function () { return boost_post$1; });
 const _lazy_l72VZz = () => Promise.resolve().then(function () { return me_get$1; });
 const _lazy_C8yzO1 = () => Promise.resolve().then(function () { return _userId__get$1; });
 const _lazy_yE9Fyp = () => Promise.resolve().then(function () { return toggle_post$1; });
+const _lazy_0zEPp5 = () => Promise.resolve().then(function () { return _id__delete$1; });
 const _lazy_k6CZb1 = () => Promise.resolve().then(function () { return _id__get$3; });
+const _lazy_tCdniC = () => Promise.resolve().then(function () { return _id__patch$1; });
 const _lazy_fZvfCq = () => Promise.resolve().then(function () { return sold_post$1; });
 const _lazy_gfJ9Fv = () => Promise.resolve().then(function () { return index_get$3; });
 const _lazy_qpvjYV = () => Promise.resolve().then(function () { return index_post$1; });
 const _lazy_Mvnbzu = () => Promise.resolve().then(function () { return index_get$1; });
 const _lazy_Q5gYyg = () => Promise.resolve().then(function () { return read_post$1; });
 const _lazy_8Z4N7L = () => Promise.resolve().then(function () { return _id__get$1; });
+const _lazy_riJd_8 = () => Promise.resolve().then(function () { return me_patch$1; });
+const _lazy_pbAdrB = () => Promise.resolve().then(function () { return listings_get$1; });
 const _lazy_kKyCfm = () => Promise.resolve().then(function () { return facebook_get$1; });
 const _lazy_r1_r_I = () => Promise.resolve().then(function () { return google_get$1; });
 const _lazy_vuwYhi = () => Promise.resolve().then(function () { return renderer; });
@@ -3901,19 +3924,27 @@ const handlers = [
   { route: '', handler: _EjhI9W, lazy: false, middleware: true, method: undefined },
   { route: '/api/alerts/:sellerId', handler: _lazy_nZN6lo, lazy: true, middleware: false, method: "get" },
   { route: '/api/alerts/toggle', handler: _lazy_hID8BJ, lazy: true, middleware: false, method: "post" },
+  { route: '/api/auth/forgot-password', handler: _lazy_8uS3dM, lazy: true, middleware: false, method: "post" },
   { route: '/api/auth/login', handler: _lazy_eTwOuS, lazy: true, middleware: false, method: "post" },
   { route: '/api/auth/register', handler: _lazy_HQvkq4, lazy: true, middleware: false, method: "post" },
+  { route: '/api/auth/resend-verification', handler: _lazy_4SJnmq, lazy: true, middleware: false, method: "post" },
+  { route: '/api/auth/reset-password', handler: _lazy_TJM8J1, lazy: true, middleware: false, method: "post" },
+  { route: '/api/auth/verify-email', handler: _lazy_qakRho, lazy: true, middleware: false, method: "post" },
   { route: '/api/credits/boost', handler: _lazy_KSrc5l, lazy: true, middleware: false, method: "post" },
   { route: '/api/credits/me', handler: _lazy_l72VZz, lazy: true, middleware: false, method: "get" },
   { route: '/api/favorites/:userId', handler: _lazy_C8yzO1, lazy: true, middleware: false, method: "get" },
   { route: '/api/favorites/toggle', handler: _lazy_yE9Fyp, lazy: true, middleware: false, method: "post" },
+  { route: '/api/listings/:id', handler: _lazy_0zEPp5, lazy: true, middleware: false, method: "delete" },
   { route: '/api/listings/:id', handler: _lazy_k6CZb1, lazy: true, middleware: false, method: "get" },
+  { route: '/api/listings/:id', handler: _lazy_tCdniC, lazy: true, middleware: false, method: "patch" },
   { route: '/api/listings/:id/sold', handler: _lazy_fZvfCq, lazy: true, middleware: false, method: "post" },
   { route: '/api/listings', handler: _lazy_gfJ9Fv, lazy: true, middleware: false, method: "get" },
   { route: '/api/listings', handler: _lazy_qpvjYV, lazy: true, middleware: false, method: "post" },
   { route: '/api/notifications', handler: _lazy_Mvnbzu, lazy: true, middleware: false, method: "get" },
   { route: '/api/notifications/read', handler: _lazy_Q5gYyg, lazy: true, middleware: false, method: "post" },
   { route: '/api/sellers/:id', handler: _lazy_8Z4N7L, lazy: true, middleware: false, method: "get" },
+  { route: '/api/sellers/me', handler: _lazy_riJd_8, lazy: true, middleware: false, method: "patch" },
+  { route: '/api/sellers/me/listings', handler: _lazy_pbAdrB, lazy: true, middleware: false, method: "get" },
   { route: '/auth/facebook', handler: _lazy_kKyCfm, lazy: true, middleware: false, method: "get" },
   { route: '/auth/google', handler: _lazy_r1_r_I, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy_vuwYhi, lazy: true, middleware: false, method: undefined },
@@ -4231,6 +4262,29 @@ const toggle_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: toggle_post$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const forgotPassword_post = defineEventHandler(async (event) => {
+  var _a;
+  const body = await readBody(event);
+  const email = (_a = body.email) == null ? void 0 : _a.trim().toLowerCase();
+  const generic = { message: "Si un compte existe avec cet email, un lien de r\xE9initialisation a \xE9t\xE9 envoy\xE9." };
+  if (!email) return generic;
+  const db = await getDb();
+  const seller = db.data.sellers.find((s) => s.email === email && s.passwordHash);
+  if (!seller) return generic;
+  const token = nanoid(32);
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1e3).toISOString();
+  db.data.passwordResets[token] = { userId: seller.id, expiresAt };
+  await db.write();
+  const resetLink = `/reinitialiser-mot-de-passe?token=${token}`;
+  await sendMail(email, "R\xE9initialisation de votre mot de passe", `Cliquez ici : ${resetLink}`);
+  return { ...generic, devResetLink: resetLink };
+});
+
+const forgotPassword_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: forgotPassword_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const login_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
   if (!body.email || !body.password) {
@@ -4279,6 +4333,7 @@ const register_post = defineEventHandler(async (event) => {
     throw createError({ statusCode: 409, statusMessage: "Un compte existe d\xE9j\xE0 avec cet email" });
   }
   const passwordHash = await hashPassword(body.password);
+  const emailVerificationToken = nanoid(32);
   if (seller) {
     seller.passwordHash = passwordHash;
   } else {
@@ -4292,6 +4347,8 @@ const register_post = defineEventHandler(async (event) => {
       isVerified: false,
       responseRate: 0,
       email,
+      emailVerified: false,
+      emailVerificationToken,
       authProvider: "password",
       passwordHash
     };
@@ -4299,15 +4356,89 @@ const register_post = defineEventHandler(async (event) => {
     db.data.credits[seller.id] = 3;
   }
   await db.write();
+  const verifyLink = `/verifier-email?token=${emailVerificationToken}`;
+  await sendMail(email, "Confirmez votre email", `Cliquez ici pour confirmer votre compte : ${verifyLink}`);
   await setUserSession(event, {
     user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl }
   });
-  return { success: true };
+  return { success: true, devVerifyLink: verifyLink };
 });
 
 const register_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: register_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const resendVerification_post = defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+  const db = await getDb();
+  const seller = db.data.sellers.find((s) => s.id === session.user.id);
+  if (!seller || !seller.email) {
+    throw createError({ statusCode: 400, statusMessage: "Aucun email associ\xE9 \xE0 ce compte" });
+  }
+  if (seller.emailVerified) {
+    return { success: true, alreadyVerified: true };
+  }
+  const token = nanoid(32);
+  seller.emailVerificationToken = token;
+  await db.write();
+  const verifyLink = `/verifier-email?token=${token}`;
+  await sendMail(seller.email, "Confirmez votre email", `Cliquez ici : ${verifyLink}`);
+  return { success: true, devVerifyLink: verifyLink };
+});
+
+const resendVerification_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: resendVerification_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const resetPassword_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  if (!body.token || !body.password) {
+    throw createError({ statusCode: 400, statusMessage: "Token et mot de passe requis" });
+  }
+  if (body.password.length < 6) {
+    throw createError({ statusCode: 400, statusMessage: "Le mot de passe doit contenir au moins 6 caract\xE8res" });
+  }
+  const db = await getDb();
+  const entry = db.data.passwordResets[body.token];
+  if (!entry || new Date(entry.expiresAt) < /* @__PURE__ */ new Date()) {
+    throw createError({ statusCode: 400, statusMessage: "Lien invalide ou expir\xE9" });
+  }
+  const seller = db.data.sellers.find((s) => s.id === entry.userId);
+  if (!seller) {
+    throw createError({ statusCode: 404, statusMessage: "Compte introuvable" });
+  }
+  seller.passwordHash = await hashPassword(body.password);
+  delete db.data.passwordResets[body.token];
+  await db.write();
+  return { success: true };
+});
+
+const resetPassword_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: resetPassword_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const verifyEmail_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  if (!body.token) {
+    throw createError({ statusCode: 400, statusMessage: "Token requis" });
+  }
+  const db = await getDb();
+  const seller = db.data.sellers.find((s) => s.emailVerificationToken === body.token);
+  if (!seller) {
+    throw createError({ statusCode: 400, statusMessage: "Lien de v\xE9rification invalide ou d\xE9j\xE0 utilis\xE9" });
+  }
+  seller.emailVerified = true;
+  seller.emailVerificationToken = void 0;
+  await db.write();
+  return { success: true };
+});
+
+const verifyEmail_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: verifyEmail_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const COUT_BOOST = 2;
@@ -4390,6 +4521,27 @@ const toggle_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: toggle_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const _id__delete = defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+  const id = getRouterParam(event, "id");
+  const db = await getDb();
+  const idx = db.data.listings.findIndex((l) => l.id === id);
+  if (idx === -1) {
+    throw createError({ statusCode: 404, statusMessage: "Annonce introuvable" });
+  }
+  if (db.data.listings[idx].userId !== session.user.id) {
+    throw createError({ statusCode: 403, statusMessage: "Cette annonce ne vous appartient pas" });
+  }
+  db.data.listings.splice(idx, 1);
+  await db.write();
+  return { success: true };
+});
+
+const _id__delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _id__delete
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const _id__get$2 = defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
   const db = await getDb();
@@ -4403,6 +4555,33 @@ const _id__get$2 = defineEventHandler(async (event) => {
 const _id__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: _id__get$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _id__patch = defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+  const id = getRouterParam(event, "id");
+  const body = await readBody(event);
+  const db = await getDb();
+  const listing = db.data.listings.find((l) => l.id === id);
+  if (!listing) {
+    throw createError({ statusCode: 404, statusMessage: "Annonce introuvable" });
+  }
+  if (listing.userId !== session.user.id) {
+    throw createError({ statusCode: 403, statusMessage: "Cette annonce ne vous appartient pas" });
+  }
+  if (body.title !== void 0) listing.title = body.title;
+  if (body.description !== void 0) listing.description = body.description;
+  if (body.price !== void 0) listing.price = Number(body.price);
+  if (body.categorySlug !== void 0) listing.categorySlug = body.categorySlug;
+  if (body.city !== void 0) listing.city = body.city;
+  if (body.images !== void 0) listing.images = body.images;
+  await db.write();
+  return { listing };
+});
+
+const _id__patch$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _id__patch
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const sold_post = defineEventHandler(async (event) => {
@@ -4542,6 +4721,11 @@ const read_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: read_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
+function toPublicSeller(seller) {
+  const { passwordHash, emailVerificationToken, ...safe } = seller;
+  return safe;
+}
+
 const _id__get = defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
   const db = await getDb();
@@ -4550,12 +4734,48 @@ const _id__get = defineEventHandler(async (event) => {
     throw createError({ statusCode: 404, statusMessage: "Vendeur introuvable" });
   }
   const listings = db.data.listings.filter((l) => l.userId === id && l.status === "published").sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  return { seller, listings, listingsCount: listings.length };
+  return { seller: toPublicSeller(seller), listings, listingsCount: listings.length };
 });
 
 const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: _id__get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const me_patch = defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+  const body = await readBody(event);
+  const db = await getDb();
+  const seller = db.data.sellers.find((s) => s.id === session.user.id);
+  if (!seller) {
+    throw createError({ statusCode: 404, statusMessage: "Compte introuvable" });
+  }
+  if (body.name !== void 0 && body.name.trim()) seller.name = body.name.trim();
+  if (body.city !== void 0) seller.city = body.city;
+  if (body.phone !== void 0) seller.phone = body.phone;
+  if (body.avatarUrl !== void 0) seller.avatarUrl = body.avatarUrl;
+  await db.write();
+  await setUserSession(event, {
+    user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl }
+  });
+  return { seller: toPublicSeller(seller) };
+});
+
+const me_patch$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: me_patch
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const listings_get = defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+  const db = await getDb();
+  const listings = db.data.listings.filter((l) => l.userId === session.user.id).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return { listings };
+});
+
+const listings_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: listings_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const facebook_get = defineOAuthFacebookEventHandler({

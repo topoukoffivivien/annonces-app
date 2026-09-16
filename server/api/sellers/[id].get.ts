@@ -1,4 +1,5 @@
 import { getDb } from '../../utils/db'
+import { toPublicSeller } from '../../types/seller'
 
 // GET /api/sellers/:id — profil + annonces publiées de ce vendeur
 export default defineEventHandler(async (event) => {
@@ -14,5 +15,5 @@ export default defineEventHandler(async (event) => {
     .filter(l => l.userId === id && l.status === 'published')
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
-  return { seller, listings, listingsCount: listings.length }
+  return { seller: toPublicSeller(seller), listings, listingsCount: listings.length }
 })
