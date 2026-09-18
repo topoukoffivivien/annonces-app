@@ -146,6 +146,7 @@ declare global {
   const readValidatedBody: typeof import('../../node_modules/h3').readValidatedBody
   const removeResponseHeader: typeof import('../../node_modules/h3').removeResponseHeader
   const replaceUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').replaceUserSession
+  const requireAdmin: typeof import('../../server/utils/auth').requireAdmin
   const requireUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').requireUserSession
   const runTask: typeof import('../../node_modules/nitropack/dist/runtime/internal/task').runTask
   const sanitizeStatusCode: typeof import('../../node_modules/h3').sanitizeStatusCode
@@ -406,7 +407,7 @@ export { defineOAuthZitadelEventHandler } from 'C:/Projet/annonces-app/node_modu
 export { getAtprotoClientMetadata } from 'C:/Projet/annonces-app/node_modules/nuxt-auth-utils/dist/runtime/server/utils/atproto';
 export { passwordNeedsReHash } from 'C:/Projet/annonces-app/node_modules/nuxt-auth-utils/dist/runtime/server/utils/password';
 export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clearUserSession, requireUserSession } from 'C:/Projet/annonces-app/node_modules/nuxt-auth-utils/dist/runtime/server/utils/session';
-export { upsertSellerFromOAuth } from 'C:/Projet/annonces-app/server/utils/auth';
+export { upsertSellerFromOAuth, requireAdmin } from 'C:/Projet/annonces-app/server/utils/auth';
 export { getDb } from 'C:/Projet/annonces-app/server/utils/db';
 export { sendMail } from 'C:/Projet/annonces-app/server/utils/mailer';
 export { hashPassword, verifyPassword } from 'C:/Projet/annonces-app/server/utils/password';

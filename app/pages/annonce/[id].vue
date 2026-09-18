@@ -44,6 +44,28 @@ const { open: openAuthModal } = useAuthModal()
 const { fetchMyBalance, boostListing } = useCredits()
 
 const isOwner = computed(() => loggedIn.value && user.value?.id === listing.value?.userId)
+
+// Signalement
+const { reportListing } = useReports()
+const showReportForm = ref(false)
+const reportReason = ref('')
+const reportMsg = ref('')
+
+async function submitReport() {
+  if (!listing.value || !reportReason.value.trim()) return
+  if (!loggedIn.value) {
+    openAuthModal()
+    return
+  }
+  try {
+    await reportListing(listing.value.id, reportReason.value.trim())
+    reportMsg.value = 'Merci, votre signalement a été transmis.'
+    showReportForm.value = false
+    reportReason.value = ''
+  } catch (e: any) {
+    reportMsg.value = e?.data?.statusMessage || 'Erreur lors du signalement'
+  }
+}
 const creditBalance = ref<number | null>(null)
 const boosting = ref(false)
 const boostMsg = ref('')
@@ -197,6 +219,20 @@ function formatDate(iso: string) {
             <li>Ne payez jamais à l'avance sans avoir vu l'article</li>
           </ul>
         </div>
+
+        <div v-if="!isOwner" class="report-zone">
+          <button v-if="!showReportForm" class="report-trigger" @click="showReportForm = true">
+            <Icon name="x" /> Signaler cette annonce
+          </button>
+          <form v-else class="report-form" @submit.prevent="submitReport">
+            <textarea v-model="reportReason" rows="2" placeholder="Décrivez le problème (contenu suspect, arnaque, article interdit...)" required />
+            <div class="report-actions">
+              <button type="button" class="cancel-btn" @click="showReportForm = false">Annuler</button>
+              <button type="submit" class="btn-primary">Envoyer</button>
+            </div>
+          </form>
+          <p v-if="reportMsg" class="report-msg">{{ reportMsg }}</p>
+        </div>
       </aside>
     </div>
     <TopListingsSlider :listings="relatedListings" title="Annonces similaires" />
@@ -291,6 +327,23 @@ function formatDate(iso: string) {
 .fav svg { width: 16px; height: 16px; }
 .safety-card h3 { font-size: var(--step-0); margin-bottom: var(--space-xs); }
 .safety-card ul { margin: 0; padding-left: 1.1em; font-size: var(--step--1); color: var(--color-ink-soft); display: flex; flex-direction: column; gap: 4px; }
+
+.report-zone { margin-top: var(--space-sm); }
+.report-trigger {
+  width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: var(--space-xs); border-radius: 13px; background: none; border: none;
+  font-size: var(--step--1); color: var(--color-ink-soft);
+}
+.report-trigger:hover { color: var(--color-danger); }
+.report-trigger svg { width: 13px; height: 13px; }
+.report-form { display: flex; flex-direction: column; gap: var(--space-xs); }
+.report-form textarea {
+  width: 100%; border: 1px solid var(--color-border); border-radius: 13px; padding: var(--space-sm);
+  font-family: inherit; font-size: var(--step--1); resize: vertical;
+}
+.report-actions { display: flex; gap: var(--space-xs); justify-content: flex-end; }
+.cancel-btn { padding: var(--space-xs) var(--space-sm); border-radius: 13px; background: #f1f1f1; border: none; font-size: var(--step--1); }
+.report-msg { font-size: var(--step--1); color: var(--color-primary-ink); margin-top: var(--space-xs); text-align: center; }
 
 .seller-card {
   display: flex; align-items: center; gap: var(--space-sm);

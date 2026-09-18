@@ -132,7 +132,7 @@ onUnmounted(() => {
               <NuxtLink :to="`/vendeur/${user?.id}`" class="dropdown-item" @click="userMenuOpen = false">
                 <Icon name="tag" /> Mon profil public
               </NuxtLink>
-              <NuxtLink to="/compte" class="dropdown-item" @click="userMenuOpen = false">
+              <NuxtLink to="/vendeur/modifier" class="dropdown-item" @click="userMenuOpen = false">
                 <Icon name="lock" /> Mon compte
               </NuxtLink>
               <NuxtLink to="/favoris" class="dropdown-item" @click="userMenuOpen = false">
@@ -140,6 +140,9 @@ onUnmounted(() => {
               </NuxtLink>
               <NuxtLink to="/publier" class="dropdown-item" @click="userMenuOpen = false">
                 <Icon name="image" /> Publier une annonce
+              </NuxtLink>
+              <NuxtLink v-if="user?.isAdmin" to="/admin" class="dropdown-item" @click="userMenuOpen = false">
+                <Icon name="bell" /> Modération
               </NuxtLink>
               <button class="dropdown-item danger" @click="logout">
                 <Icon name="x" /> Se déconnecter
@@ -176,7 +179,7 @@ onUnmounted(() => {
                 <p class="mobile-account-name">{{ user?.name }}</p>
                 <NuxtLink :to="`/vendeur/${user?.id}`" class="mobile-account-link" @click="open = false">Voir mon profil</NuxtLink>
                 ·
-                <NuxtLink to="/compte" class="mobile-account-link" @click="open = false">Gérer mon compte</NuxtLink>
+                <NuxtLink to="/vendeur/modifier" class="mobile-account-link" @click="open = false">Gérer mon compte</NuxtLink>
               </div>
             </div>
             <button v-else class="mobile-cta" @click="openAuthModal(); open = false">

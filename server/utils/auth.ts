@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid'
 import { getDb } from './db'
 import type { Seller } from '../types/seller'
+import type { H3Event } from 'h3'
 
 function initialsFromName(name: string) {
   return name
@@ -43,6 +44,19 @@ export async function upsertSellerFromOAuth(input: {
   } else if (input.avatarUrl && seller.avatarUrl !== input.avatarUrl) {
     seller.avatarUrl = input.avatarUrl
     await db.write()
+  }
+
+  return seller
+}
+
+// Exige une session ET que le compte soit administrateur. Lève une 403 sinon.
+export async function requireAdmin(event: H3Event): Promise<Seller> {
+  const session = await requireUserSession(event)
+  const db = await getDb()
+  const seller = db.data.sellers.find(s => s.id === session.user.id)
+
+  if (!seller?.isAdmin) {
+    throw createError({ statusCode: 403, statusMessage: 'Accès réservé aux administrateurs' })
   }
 
   return seller

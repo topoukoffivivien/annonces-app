@@ -2924,7 +2924,9 @@ const sellers = [
     memberSince: "2023-03-01",
     phone: "+228 90 00 00 00",
     isVerified: true,
-    responseRate: 92
+    responseRate: 92,
+    isAdmin: true,
+    email: "demo@annoncestg.com"
   },
   {
     id: "seller-2",
@@ -2934,7 +2936,8 @@ const sellers = [
     memberSince: "2022-08-15",
     phone: "+228 91 22 33 44",
     isVerified: true,
-    responseRate: 78
+    responseRate: 78,
+    isAdmin: true
   },
   {
     id: "seller-3",
@@ -3172,6 +3175,8 @@ const defaultData = {
   alerts: {},
   notifications: {},
   passwordResets: {},
+  reports: [],
+  reviews: [],
   sellers,
   categories,
   cities,
@@ -3209,6 +3214,14 @@ async function getDb() {
       dbInstance.data.passwordResets = {};
       migrated = true;
     }
+    if (!dbInstance.data.reports) {
+      dbInstance.data.reports = [];
+      migrated = true;
+    }
+    if (!dbInstance.data.reviews) {
+      dbInstance.data.reviews = [];
+      migrated = true;
+    }
     if (migrated) await dbInstance.write();
   }
   return dbInstance;
@@ -3243,6 +3256,15 @@ async function upsertSellerFromOAuth(input) {
   } else if (input.avatarUrl && seller.avatarUrl !== input.avatarUrl) {
     seller.avatarUrl = input.avatarUrl;
     await db.write();
+  }
+  return seller;
+}
+async function requireAdmin(event) {
+  const session = await requireUserSession(event);
+  const db = await getDb();
+  const seller = db.data.sellers.find((s) => s.id === session.user.id);
+  if (!(seller == null ? void 0 : seller.isAdmin)) {
+    throw createError({ statusCode: 403, statusMessage: "Acc\xE8s r\xE9serv\xE9 aux administrateurs" });
   }
   return seller;
 }
@@ -3893,7 +3915,12 @@ async function getIslandContext(event) {
 	};
 }
 
-const _lazy_nZN6lo = () => Promise.resolve().then(function () { return _sellerId__get$1; });
+const _lazy_3VLw3O = () => Promise.resolve().then(function () { return listings_get$3; });
+const _lazy_WJt9zA = () => Promise.resolve().then(function () { return _id__delete$3; });
+const _lazy_0GpqMD = () => Promise.resolve().then(function () { return approve_post$1; });
+const _lazy_E7hM2h = () => Promise.resolve().then(function () { return reports_get$1; });
+const _lazy_TLQXxV = () => Promise.resolve().then(function () { return resolve_post$1; });
+const _lazy_nZN6lo = () => Promise.resolve().then(function () { return _sellerId__get$3; });
 const _lazy_hID8BJ = () => Promise.resolve().then(function () { return toggle_post$3; });
 const _lazy_8uS3dM = () => Promise.resolve().then(function () { return forgotPassword_post$1; });
 const _lazy_eTwOuS = () => Promise.resolve().then(function () { return login_post$1; });
@@ -3910,9 +3937,12 @@ const _lazy_k6CZb1 = () => Promise.resolve().then(function () { return _id__get$
 const _lazy_tCdniC = () => Promise.resolve().then(function () { return _id__patch$1; });
 const _lazy_fZvfCq = () => Promise.resolve().then(function () { return sold_post$1; });
 const _lazy_gfJ9Fv = () => Promise.resolve().then(function () { return index_get$3; });
-const _lazy_qpvjYV = () => Promise.resolve().then(function () { return index_post$1; });
+const _lazy_qpvjYV = () => Promise.resolve().then(function () { return index_post$5; });
 const _lazy_Mvnbzu = () => Promise.resolve().then(function () { return index_get$1; });
 const _lazy_Q5gYyg = () => Promise.resolve().then(function () { return read_post$1; });
+const _lazy__Dge9b = () => Promise.resolve().then(function () { return index_post$3; });
+const _lazy_w8onB5 = () => Promise.resolve().then(function () { return _sellerId__get$1; });
+const _lazy_3_FdbP = () => Promise.resolve().then(function () { return index_post$1; });
 const _lazy_8Z4N7L = () => Promise.resolve().then(function () { return _id__get$1; });
 const _lazy_riJd_8 = () => Promise.resolve().then(function () { return me_patch$1; });
 const _lazy_pbAdrB = () => Promise.resolve().then(function () { return listings_get$1; });
@@ -3922,6 +3952,11 @@ const _lazy_vuwYhi = () => Promise.resolve().then(function () { return renderer;
 
 const handlers = [
   { route: '', handler: _EjhI9W, lazy: false, middleware: true, method: undefined },
+  { route: '/api/admin/listings', handler: _lazy_3VLw3O, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/listings/:id', handler: _lazy_WJt9zA, lazy: true, middleware: false, method: "delete" },
+  { route: '/api/admin/listings/:id/approve', handler: _lazy_0GpqMD, lazy: true, middleware: false, method: "post" },
+  { route: '/api/admin/reports', handler: _lazy_E7hM2h, lazy: true, middleware: false, method: "get" },
+  { route: '/api/admin/reports/:id/resolve', handler: _lazy_TLQXxV, lazy: true, middleware: false, method: "post" },
   { route: '/api/alerts/:sellerId', handler: _lazy_nZN6lo, lazy: true, middleware: false, method: "get" },
   { route: '/api/alerts/toggle', handler: _lazy_hID8BJ, lazy: true, middleware: false, method: "post" },
   { route: '/api/auth/forgot-password', handler: _lazy_8uS3dM, lazy: true, middleware: false, method: "post" },
@@ -3942,6 +3977,9 @@ const handlers = [
   { route: '/api/listings', handler: _lazy_qpvjYV, lazy: true, middleware: false, method: "post" },
   { route: '/api/notifications', handler: _lazy_Mvnbzu, lazy: true, middleware: false, method: "get" },
   { route: '/api/notifications/read', handler: _lazy_Q5gYyg, lazy: true, middleware: false, method: "post" },
+  { route: '/api/reports', handler: _lazy__Dge9b, lazy: true, middleware: false, method: "post" },
+  { route: '/api/reviews/:sellerId', handler: _lazy_w8onB5, lazy: true, middleware: false, method: "get" },
+  { route: '/api/reviews', handler: _lazy_3_FdbP, lazy: true, middleware: false, method: "post" },
   { route: '/api/sellers/:id', handler: _lazy_8Z4N7L, lazy: true, middleware: false, method: "get" },
   { route: '/api/sellers/me', handler: _lazy_riJd_8, lazy: true, middleware: false, method: "patch" },
   { route: '/api/sellers/me/listings', handler: _lazy_pbAdrB, lazy: true, middleware: false, method: "get" },
@@ -4227,7 +4265,88 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: styles
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const _sellerId__get = defineEventHandler(async (event) => {
+const listings_get$2 = defineEventHandler(async (event) => {
+  await requireAdmin(event);
+  const db = await getDb();
+  const rejected = db.data.listings.filter((l) => l.status === "rejected").sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return { rejected };
+});
+
+const listings_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: listings_get$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _id__delete$2 = defineEventHandler(async (event) => {
+  await requireAdmin(event);
+  const id = getRouterParam(event, "id");
+  const db = await getDb();
+  const index = db.data.listings.findIndex((l) => l.id === id);
+  if (index === -1) {
+    throw createError({ statusCode: 404, statusMessage: "Annonce introuvable" });
+  }
+  db.data.listings.splice(index, 1);
+  await db.write();
+  return { success: true };
+});
+
+const _id__delete$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _id__delete$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const approve_post = defineEventHandler(async (event) => {
+  await requireAdmin(event);
+  const id = getRouterParam(event, "id");
+  const db = await getDb();
+  const listing = db.data.listings.find((l) => l.id === id);
+  if (!listing) {
+    throw createError({ statusCode: 404, statusMessage: "Annonce introuvable" });
+  }
+  listing.status = "published";
+  await db.write();
+  return { listing };
+});
+
+const approve_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: approve_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const reports_get = defineEventHandler(async (event) => {
+  await requireAdmin(event);
+  const db = await getDb();
+  const reports = db.data.reports.filter((r) => r.status === "open").sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((r) => ({
+    ...r,
+    listing: db.data.listings.find((l) => l.id === r.listingId) || null
+  }));
+  return { reports };
+});
+
+const reports_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: reports_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const resolve_post = defineEventHandler(async (event) => {
+  await requireAdmin(event);
+  const id = getRouterParam(event, "id");
+  const db = await getDb();
+  const report = db.data.reports.find((r) => r.id === id);
+  if (!report) {
+    throw createError({ statusCode: 404, statusMessage: "Signalement introuvable" });
+  }
+  report.status = "resolved";
+  await db.write();
+  return { success: true };
+});
+
+const resolve_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: resolve_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _sellerId__get$2 = defineEventHandler(async (event) => {
   const sellerId = getRouterParam(event, "sellerId");
   const session = await getUserSession(event);
   if (!session.user) return { subscribed: false };
@@ -4236,9 +4355,9 @@ const _sellerId__get = defineEventHandler(async (event) => {
   return { subscribed: subscribers.includes(session.user.id) };
 });
 
-const _sellerId__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _sellerId__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _sellerId__get
+  default: _sellerId__get$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const toggle_post$2 = defineEventHandler(async (event) => {
@@ -4302,7 +4421,7 @@ const login_post = defineEventHandler(async (event) => {
     throw invalidCreds();
   }
   await setUserSession(event, {
-    user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl }
+    user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl, isAdmin: seller.isAdmin }
   });
   return { success: true };
 });
@@ -4359,7 +4478,7 @@ const register_post = defineEventHandler(async (event) => {
   const verifyLink = `/verifier-email?token=${emailVerificationToken}`;
   await sendMail(email, "Confirmez votre email", `Cliquez ici pour confirmer votre compte : ${verifyLink}`);
   await setUserSession(event, {
-    user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl }
+    user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl, isAdmin: seller.isAdmin }
   });
   return { success: true, devVerifyLink: verifyLink };
 });
@@ -4640,7 +4759,7 @@ const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const MOTS_INTERDITS = ["arnaque", "contrefa\xE7on", "faux"];
-const index_post = defineEventHandler(async (event) => {
+const index_post$4 = defineEventHandler(async (event) => {
   var _a;
   const body = await readBody(event);
   if (!body.title || !body.price || !body.categorySlug || !body.city) {
@@ -4688,9 +4807,9 @@ const index_post = defineEventHandler(async (event) => {
   };
 });
 
-const index_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_post$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_post
+  default: index_post$4
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const index_get = defineEventHandler(async (event) => {
@@ -4719,6 +4838,84 @@ const read_post = defineEventHandler(async (event) => {
 const read_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: read_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const index_post$2 = defineEventHandler(async (event) => {
+  var _a;
+  const session = await requireUserSession(event);
+  const body = await readBody(event);
+  if (!body.listingId || !((_a = body.reason) == null ? void 0 : _a.trim())) {
+    throw createError({ statusCode: 400, statusMessage: "listingId et reason requis" });
+  }
+  const db = await getDb();
+  const listing = db.data.listings.find((l) => l.id === body.listingId);
+  if (!listing) {
+    throw createError({ statusCode: 404, statusMessage: "Annonce introuvable" });
+  }
+  db.data.reports.push({
+    id: nanoid(8),
+    listingId: body.listingId,
+    reason: body.reason.trim(),
+    reporterId: session.user.id,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    status: "open"
+  });
+  await db.write();
+  return { success: true };
+});
+
+const index_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_post$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _sellerId__get = defineEventHandler(async (event) => {
+  const sellerId = getRouterParam(event, "sellerId");
+  const db = await getDb();
+  const reviews = db.data.reviews.filter((r) => r.sellerId === sellerId).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const average = reviews.length ? Math.round(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length * 10) / 10 : 0;
+  return { reviews, average, count: reviews.length };
+});
+
+const _sellerId__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _sellerId__get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const index_post = defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+  const body = await readBody(event);
+  if (!body.sellerId || !body.rating || body.rating < 1 || body.rating > 5) {
+    throw createError({ statusCode: 400, statusMessage: "sellerId et une note de 1 \xE0 5 sont requis" });
+  }
+  if (body.sellerId === session.user.id) {
+    throw createError({ statusCode: 400, statusMessage: "Vous ne pouvez pas vous noter vous-m\xEAme" });
+  }
+  const db = await getDb();
+  const author = db.data.sellers.find((s) => s.id === session.user.id);
+  const existing = db.data.reviews.find((r) => r.sellerId === body.sellerId && r.authorId === session.user.id);
+  if (existing) {
+    existing.rating = body.rating;
+    existing.comment = body.comment || "";
+    existing.createdAt = (/* @__PURE__ */ new Date()).toISOString();
+  } else {
+    db.data.reviews.push({
+      id: nanoid(8),
+      sellerId: body.sellerId,
+      authorId: session.user.id,
+      authorName: (author == null ? void 0 : author.name) || session.user.name || "Utilisateur",
+      rating: body.rating,
+      comment: body.comment || "",
+      createdAt: (/* @__PURE__ */ new Date()).toISOString()
+    });
+  }
+  await db.write();
+  return { success: true };
+});
+
+const index_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function toPublicSeller(seller) {
@@ -4796,7 +4993,8 @@ const facebook_get = defineOAuthFacebookEventHandler({
         id: seller.id,
         name: seller.name,
         email: seller.email,
-        avatarUrl: seller.avatarUrl
+        avatarUrl: seller.avatarUrl,
+        isAdmin: seller.isAdmin
       }
     });
     return sendRedirect(event, "/");
@@ -4828,7 +5026,8 @@ const google_get = defineOAuthGoogleEventHandler({
         id: seller.id,
         name: seller.name,
         email: seller.email,
-        avatarUrl: seller.avatarUrl
+        avatarUrl: seller.avatarUrl,
+        isAdmin: seller.isAdmin
       }
     });
     return sendRedirect(event, "/");

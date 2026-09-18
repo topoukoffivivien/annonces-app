@@ -16,7 +16,8 @@ export default defineOAuthFacebookEventHandler({
         id: seller.id,
         name: seller.name,
         email: seller.email,
-        avatarUrl: seller.avatarUrl
+        avatarUrl: seller.avatarUrl,
+        isAdmin: seller.isAdmin
       }
     })
 

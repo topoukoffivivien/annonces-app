@@ -5,6 +5,8 @@ import { mkdirSync } from 'fs'
 import type { Listing } from '../types/listing'
 import type { Seller } from '../types/seller'
 import type { AppNotification } from '../types/notification'
+import type { Report } from '../types/report'
+import type { Review } from '../types/review'
 
 interface DbSchema {
   listings: Listing[]
@@ -16,6 +18,8 @@ interface DbSchema {
   alerts: Record<string, string[]>          // sellerId -> ids des abonnés
   notifications: Record<string, AppNotification[]> // userId -> ses notifications
   passwordResets: Record<string, { userId: string; expiresAt: string }> // token -> compte
+  reports: Report[]
+  reviews: Review[]
 }
 
 const categories = [
@@ -37,7 +41,9 @@ const sellers: Seller[] = [
     memberSince: '2023-03-01',
     phone: '+228 90 00 00 00',
     isVerified: true,
-    responseRate: 92
+    responseRate: 92,
+    isAdmin: true,
+    email: 'demo@annoncestg.com'
   },
   {
     id: 'seller-2',
@@ -47,7 +53,8 @@ const sellers: Seller[] = [
     memberSince: '2022-08-15',
     phone: '+228 91 22 33 44',
     isVerified: true,
-    responseRate: 78
+    responseRate: 78,
+    isAdmin: true,
   },
   {
     id: 'seller-3',
@@ -303,6 +310,8 @@ const defaultData: DbSchema = {
   alerts: {},
   notifications: {},
   passwordResets: {},
+  reports: [],
+  reviews: [],
   sellers,
   categories,
   cities,
@@ -345,6 +354,14 @@ export async function getDb() {
     }
     if (!dbInstance.data.passwordResets) {
       dbInstance.data.passwordResets = {}
+      migrated = true
+    }
+    if (!dbInstance.data.reports) {
+      dbInstance.data.reports = []
+      migrated = true
+    }
+    if (!dbInstance.data.reviews) {
+      dbInstance.data.reviews = []
       migrated = true
     }
     if (migrated) await dbInstance.write()

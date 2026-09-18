@@ -13,6 +13,7 @@ export interface Seller {
   avatarUrl?: string
   authProvider?: 'google' | 'facebook' | 'password'
   passwordHash?: string
+  isAdmin?: boolean
 }
 
 // Version sûre à renvoyer au client : jamais le hash de mot de passe,

@@ -98,6 +98,7 @@ declare global {
   const unref: typeof import('../../node_modules/vue/index').unref
   const updateAppConfig: typeof import('../../node_modules/nuxt/dist/app/config').updateAppConfig
   const useAccount: typeof import('../../app/composables/useAccount').useAccount
+  const useAdmin: typeof import('../../app/composables/useAdmin').useAdmin
   const useAlerts: typeof import('../../app/composables/useAlerts').useAlerts
   const useApi: typeof import('../../app/composables/useApi').useApi
   const useAppConfig: typeof import('../../node_modules/nuxt/dist/app/config').useAppConfig
@@ -130,12 +131,14 @@ declare global {
   const useNuxtDevTools: typeof import('../../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools').useNuxtDevTools
   const usePinia: typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables').usePinia
   const usePreviewMode: typeof import('../../node_modules/nuxt/dist/app/composables/preview').usePreviewMode
+  const useReports: typeof import('../../app/composables/useReports').useReports
   const useRequestEvent: typeof import('../../node_modules/nuxt/dist/app/composables/ssr').useRequestEvent
   const useRequestFetch: typeof import('../../node_modules/nuxt/dist/app/composables/ssr').useRequestFetch
   const useRequestHeader: typeof import('../../node_modules/nuxt/dist/app/composables/ssr').useRequestHeader
   const useRequestHeaders: typeof import('../../node_modules/nuxt/dist/app/composables/ssr').useRequestHeaders
   const useRequestURL: typeof import('../../node_modules/nuxt/dist/app/composables/url').useRequestURL
   const useResponseHeader: typeof import('../../node_modules/nuxt/dist/app/composables/ssr').useResponseHeader
+  const useReviews: typeof import('../../app/composables/useReviews').useReviews
   const useRoute: typeof import('../../node_modules/nuxt/dist/app/composables/router').useRoute
   const useRouteAnnouncer: typeof import('../../node_modules/nuxt/dist/app/composables/route-announcer').useRouteAnnouncer
   const useRouter: typeof import('../../node_modules/nuxt/dist/app/composables/router').useRouter
@@ -215,6 +218,9 @@ declare global {
   export type { UpdateSellerPayload } from '../../app/composables/useAccount'
   import('../../app/composables/useAccount')
   // @ts-ignore
+  export type { ReportWithListing } from '../../app/composables/useAdmin'
+  import('../../app/composables/useAdmin')
+  // @ts-ignore
   export type { Category } from '../../app/composables/useCategories'
   import('../../app/composables/useCategories')
   // @ts-ignore
@@ -223,6 +229,9 @@ declare global {
   // @ts-ignore
   export type { AppNotification } from '../../app/composables/useNotifications'
   import('../../app/composables/useNotifications')
+  // @ts-ignore
+  export type { Review } from '../../app/composables/useReviews'
+  import('../../app/composables/useReviews')
   // @ts-ignore
   export type { Seller } from '../../app/composables/useSellers'
   import('../../app/composables/useSellers')
@@ -328,6 +337,7 @@ declare module 'vue' {
     readonly unref: UnwrapRef<typeof import('../../node_modules/vue/index')['unref']>
     readonly updateAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['updateAppConfig']>
     readonly useAccount: UnwrapRef<typeof import('../../app/composables/useAccount')['useAccount']>
+    readonly useAdmin: UnwrapRef<typeof import('../../app/composables/useAdmin')['useAdmin']>
     readonly useAlerts: UnwrapRef<typeof import('../../app/composables/useAlerts')['useAlerts']>
     readonly useApi: UnwrapRef<typeof import('../../app/composables/useApi')['useApi']>
     readonly useAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['useAppConfig']>
@@ -360,12 +370,14 @@ declare module 'vue' {
     readonly useNuxtDevTools: UnwrapRef<typeof import('../../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools')['useNuxtDevTools']>
     readonly usePinia: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['usePinia']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
+    readonly useReports: UnwrapRef<typeof import('../../app/composables/useReports')['useReports']>
     readonly useRequestEvent: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useRequestEvent']>
     readonly useRequestFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useRequestFetch']>
     readonly useRequestHeader: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useRequestHeader']>
     readonly useRequestHeaders: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useRequestHeaders']>
     readonly useRequestURL: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/url')['useRequestURL']>
     readonly useResponseHeader: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useResponseHeader']>
+    readonly useReviews: UnwrapRef<typeof import('../../app/composables/useReviews')['useReviews']>
     readonly useRoute: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['useRoute']>
     readonly useRouteAnnouncer: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/route-announcer')['useRouteAnnouncer']>
     readonly useRouter: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['useRouter']>

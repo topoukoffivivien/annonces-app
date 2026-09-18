@@ -5,7 +5,7 @@ import type { Seller } from '~/composables/useSellers'
 const route = useRoute()
 const { fetchSeller } = useSellers()
 
-const { data, pending } = useAsyncData<{ seller: Seller; listings: Listing[]; listingsCount: number }>(
+const { data } = await useAsyncData<{ seller: Seller; listings: Listing[]; listingsCount: number }>(
   `seller-${route.params.id}`,
   () => fetchSeller(route.params.id as string)
 )
@@ -26,12 +26,51 @@ function formatMemberSince(iso: string) {
 const isFollowing = ref(false)
 const alertsEnabled = ref(false)
 const alertsLoading = ref(false)
-const activeTab = ref<'active' | 'sold' | 'apropos'>('active')
-const showSkeleton = useMinLoading(pending, 400)
+const activeTab = ref<'active' | 'sold' | 'apropos' | 'avis'>('active')
 
-const { loggedIn } = useUserSession()
+const { loggedIn, user } = useUserSession()
 const { open: openAuthModal } = useAuthModal()
 const { fetchSubscribed, toggleAlert } = useAlerts()
+const { fetchReviews, submitReview } = useReviews()
+
+const reviews = ref<any[]>([])
+const reviewAverage = ref(0)
+const reviewCount = ref(0)
+const myRating = ref(0)
+const myComment = ref('')
+const submittingReview = ref(false)
+const reviewMsg = ref('')
+const isSelf = computed(() => loggedIn.value && user.value?.id === seller.value?.id)
+
+async function loadReviews() {
+  if (!seller.value) return
+  try {
+    const res = await fetchReviews(seller.value.id)
+    reviews.value = res.reviews
+    reviewAverage.value = res.average
+    reviewCount.value = res.count
+    const mine = res.reviews.find((r: any) => r.authorId === user.value?.id)
+    if (mine) { myRating.value = mine.rating; myComment.value = mine.comment }
+  } catch { /* silencieux */ }
+}
+watch(seller, loadReviews, { immediate: true })
+
+async function handleSubmitReview() {
+  if (!seller.value) return
+  if (!loggedIn.value) { openAuthModal(); return }
+  if (!myRating.value) { reviewMsg.value = 'Choisissez une note.'; return }
+  submittingReview.value = true
+  reviewMsg.value = ''
+  try {
+    await submitReview(seller.value.id, myRating.value, myComment.value)
+    reviewMsg.value = 'Merci pour votre avis !'
+    await loadReviews()
+  } catch (e: any) {
+    reviewMsg.value = e?.data?.statusMessage || 'Erreur lors de l\'envoi'
+  } finally {
+    submittingReview.value = false
+  }
+}
 
 watch(seller, async (s) => {
   if (s && loggedIn.value) {
@@ -60,15 +99,7 @@ async function handleAlertsToggle() {
 </script>
 
 <template>
-  <main class="container" v-if="showSkeleton">
-    <div class="profile-card">
-      <div class="skeleton-avatar shimmer" />
-      <div class="skeleton-line shimmer w-50" style="margin: 0 auto var(--space-xs);" />
-      <div class="skeleton-line shimmer w-30" style="margin: 0 auto;" />
-    </div>
-  </main>
-
-  <main class="container" v-else-if="seller">
+  <main class="container" v-if="seller">
     <div class="profile-card">
       <div class="avatar">
         {{ seller.avatarInitials }}
@@ -126,6 +157,9 @@ async function handleAlertsToggle() {
       <button :class="{ active: activeTab === 'apropos' }" @click="activeTab = 'apropos'">
         À propos
       </button>
+      <button :class="{ active: activeTab === 'avis' }" @click="activeTab = 'avis'">
+        Avis ({{ reviewCount }})
+      </button>
     </div>
 
     <section v-if="activeTab === 'active'">
@@ -142,13 +176,50 @@ async function handleAlertsToggle() {
       <p v-else class="empty">Aucune annonce vendue pour le moment.</p>
     </section>
 
-    <section v-else class="about">
+    <section v-else-if="activeTab === 'apropos'" class="about">
       <h3>À propos de {{ seller.name.split(' ')[0] }}</h3>
       <ul class="about-list">
         <li><Icon name="map-pin" /> Basé à {{ seller.city }}</li>
         <li><Icon name="tag" /> Membre depuis {{ formatMemberSince(seller.memberSince) }}</li>
         <li v-if="seller.isVerified"><Icon name="heart-filled" /> Identité vérifiée par Annonces TG</li>
       </ul>
+    </section>
+
+    <section v-else class="reviews">
+      <div class="review-summary">
+        <p class="review-average">{{ reviewAverage || '—' }} <span class="max">/5</span></p>
+        <p class="review-count">{{ reviewCount }} avis</p>
+      </div>
+
+      <div v-if="loggedIn && !isSelf" class="review-form">
+        <p class="form-label">Votre note</p>
+        <div class="stars">
+          <button
+            v-for="n in 5" :key="n" type="button"
+            class="star" :class="{ filled: n <= myRating }"
+            @click="myRating = n" :aria-label="`${n} étoiles`"
+          >★</button>
+        </div>
+        <textarea v-model="myComment" rows="2" placeholder="Votre commentaire (optionnel)" />
+        <button class="btn-primary" :disabled="submittingReview" @click="handleSubmitReview">
+          {{ submittingReview ? 'Envoi...' : 'Publier mon avis' }}
+        </button>
+        <p v-if="reviewMsg" class="review-msg">{{ reviewMsg }}</p>
+      </div>
+      <p v-else-if="!loggedIn" class="empty">
+        <button class="btn-primary" @click="openAuthModal">Se connecter pour laisser un avis</button>
+      </p>
+
+      <div v-if="reviews.length" class="review-list">
+        <div v-for="r in reviews" :key="r.id" class="review-item">
+          <div class="review-item-head">
+            <span class="review-author">{{ r.authorName }}</span>
+            <span class="review-stars">{{ '★'.repeat(r.rating) }}{{ '☆'.repeat(5 - r.rating) }}</span>
+          </div>
+          <p v-if="r.comment" class="review-comment">{{ r.comment }}</p>
+        </div>
+      </div>
+      <p v-else class="empty">Aucun avis pour l'instant.</p>
     </section>
   </main>
 </template>
@@ -250,6 +321,33 @@ async function handleAlertsToggle() {
 .about-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-xs); }
 .about-list li { display: flex; align-items: center; gap: var(--space-xs); font-size: var(--step--1); color: var(--color-ink-soft); }
 .about-list svg { width: 15px; height: 15px; color: var(--color-primary-ink); flex-shrink: 0; }
+
+.reviews { text-align: left; }
+.review-summary { text-align: center; margin-bottom: var(--space-md); }
+.review-average { font-size: var(--step-3); font-weight: 700; color: var(--color-primary-ink); margin: 0; }
+.review-average .max { font-size: var(--step-0); color: var(--color-ink-soft); font-weight: 400; }
+.review-count { font-size: var(--step--1); color: var(--color-ink-soft); margin: 0; }
+
+.review-form {
+  border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--space-md);
+  margin-bottom: var(--space-md); display: flex; flex-direction: column; gap: var(--space-sm);
+}
+.form-label { font-size: var(--step--1); font-weight: 600; margin: 0; }
+.stars { display: flex; gap: 4px; }
+.star { font-size: 24px; color: var(--color-border-strong); background: none; border: none; line-height: 1; }
+.star.filled { color: var(--color-accent); }
+.review-form textarea {
+  border: 1px solid var(--color-border); border-radius: 13px; padding: var(--space-sm);
+  font-family: inherit; font-size: var(--step--1); resize: vertical;
+}
+.review-msg { font-size: var(--step--1); color: var(--color-primary-ink); margin: 0; }
+
+.review-list { display: flex; flex-direction: column; gap: var(--space-sm); }
+.review-item { border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-sm); }
+.review-item-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.review-author { font-weight: 600; font-size: var(--step--1); }
+.review-stars { color: var(--color-accent); font-size: var(--step--1); }
+.review-comment { font-size: var(--step--1); color: var(--color-ink-soft); margin: 0; }
 
 @media (max-width: 480px) {
   .action-btn { min-width: 0; flex: 1 1 45%; }

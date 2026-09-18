@@ -3,6 +3,21 @@ import type { Serialize, Simplify } from "nitropack/types";
 declare module "nitropack/types" {
   type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
   interface InternalApi {
+    '/api/admin/listings': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/listings.get').default>>>>
+    }
+    '/api/admin/listings/:id': {
+      'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/listings/[id].delete').default>>>>
+    }
+    '/api/admin/listings/:id/approve': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/listings/[id]/approve.post').default>>>>
+    }
+    '/api/admin/reports': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/reports.get').default>>>>
+    }
+    '/api/admin/reports/:id/resolve': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/reports/[id]/resolve.post').default>>>>
+    }
     '/api/alerts/:sellerId': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/alerts/[sellerId].get').default>>>>
     }
@@ -56,6 +71,15 @@ declare module "nitropack/types" {
     }
     '/api/notifications/read': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/notifications/read.post').default>>>>
+    }
+    '/api/reports': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/reports/index.post').default>>>>
+    }
+    '/api/reviews/:sellerId': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/reviews/[sellerId].get').default>>>>
+    }
+    '/api/reviews': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/reviews/index.post').default>>>>
     }
     '/api/sellers/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/sellers/[id].get').default>>>>

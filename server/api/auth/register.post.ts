@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
   await sendMail(email, 'Confirmez votre email', `Cliquez ici pour confirmer votre compte : ${verifyLink}`)
 
   await setUserSession(event, {
-    user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl }
+    user: { id: seller.id, name: seller.name, email: seller.email, avatarUrl: seller.avatarUrl, isAdmin: seller.isAdmin }
   })
 
   // ⚠️ devVerifyLink n'est renvoyé que parce qu'aucun vrai email n'est envoyé ici.
